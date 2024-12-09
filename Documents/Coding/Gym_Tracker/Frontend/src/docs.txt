@@ -1,0 +1,622 @@
+{/* <div className="ml-[80%] mb-20">
+          {userName && (
+              <div>
+                  <p className="mt-4">Name: {userName}</p>
+                  <p>Email: {userEmail}</p>
+              </div>
+          )}
+          <button 
+              onClick={handleLogOut} 
+              className="mt-4 w-20 py-2 text-white bg-red-500 rounded-md hover:bg-red-600"
+          >
+              Logout
+          </button>
+        </div> */}
+      
+home hero 1
+<div className='sm:px-32 sm:py-10'>
+        <div
+          className='relative h-[80vh] w-[100%] bg-cover bg-end'
+          style={{
+            backgroundImage:
+              "url('https://plus.unsplash.com/premium_photo-1661629166303-03b4e70dd485?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTd8fGd5bXxlbnwwfHwwfHx8MA%3D%3D')",
+          }}
+        >
+          <div className='absolute inset-0 bg-black opacity-80'>
+            <div className='w-full h-[80vh] flex flex-col items-center justify-center'>
+              <motion.div
+                initial={{ opacity: 0, scale: 0.5, y: 50 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                transition={{ duration: 1, ease: "easeOut" }}
+                className='items-start'
+              >
+                <h2 className='text-white text-6xl font-bold'>
+                  Your Personal <br />
+                  <span className='bg-white text-black rounded-xl my-1 px-2 inline-block'>
+                    Guide to Fitness
+                  </span>
+                </h2>
+                <p className='text-white font-medium mt-2'>
+                  Discover exercises tailored to your goals <br />
+                  Track your journey to a healthier, stronger you.
+                </p>
+              </motion.div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+hero 2
+<motion.div
+              initial={{ opacity: 0, scale: 0.5, y: 50 }}
+              whileInView={{ opacity: 1, scale: 1, y: 0 }}
+              transition={{ duration: 1, ease: "easeOut" }}
+              viewport={{ once: true, amount: 0.3 }}>
+              <div className='flex flex-col items-center justify-center bg-gradient-to-t from-gray-700 via-gray-600 to-gray-400 bg-clip-text text-transparent font-extrabold text-5xl lg:text-7xl'>
+              <h2>Your Personal</h2>
+              <h2>Guide To Fitness</h2>
+              </div>
+            
+              <motion.div 
+              initial={{opacity: 0, scale: 0.5, y: 50 }}
+              whileInView={{ opacity: 1, scale: 1, y: 0 }}
+              transition={{delay:1, duration: 1, ease: "easeOut" }}
+              className='w-auto h-auto '>
+              <img className='' src="https://pbs.twimg.com/media/GbrB9tDaIAA39sz?format=png&name=small" alt="" />
+            </motion.div>
+            </motion.div>
+
+Home Component
+const Home = () => {
+  const navigate = useNavigate();
+  const userName = localStorage.getItem('userName');
+  const userEmail = localStorage.getItem('userEmail');
+  const token = localStorage.getItem('token');
+
+  useEffect(() => {
+    if (!token) {
+      navigate("/login");
+    }
+  }, [token, navigate]);
+
+  const handleLogOut = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('userName');
+    localStorage.removeItem('userEmail');
+    navigate("/login");
+  };
+
+  return (
+    <div className='overflow-hidden'>
+      <NavBar />
+
+      <div className='sm:px-32 sm:py-10'>
+        <div
+          className='relative h-[80vh] w-[100%] bg-cover bg-end'
+          style={{
+            backgroundImage: `
+              repeating-linear-gradient(
+                to right,
+                transparent 0 100px,
+                #25283b22 100px 101px
+              ),
+              repeating-linear-gradient(
+                to bottom,
+                transparent 0 100px,
+                #25283b22 100px 101px
+              )
+            `,
+          }}
+        >
+          <div className='absolute inset-0'>
+            <div className='w-full h-[80vh] flex flex-col xl:flex-row items-center justify-center xl:gap-20'>
+            <motion.div
+              initial={{ opacity: 0,  y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1, ease: "easeOut" }}
+              viewport={{ once: true, amount: 0.3 }}
+              className='flex flex-col items-center xl:items-start justify-center bg-gradient-to-t from-gray-700 via-gray-600 to-gray-400 bg-clip-text text-transparent font-extrabold text-5xl sm:text-4xl md:text-6xl'
+            >
+              <h2>Your Personal</h2>
+              <h2>Guide To Fitness</h2>
+              <p className='text-black text-sm font-extralight p-2 hidden xl:inline-block'>
+                  Discover exercises tailored to your goals <br />
+                  Track your journey to a healthier, stronger you.
+                </p>
+            </motion.div>
+            <motion.div 
+              initial={{opacity: 0,  y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1, ease: "easeOut" }}
+              className='w-80 xl:w-96 flex items-center'>
+              <img src="https://i.imgur.com/NeL0K4N.pnghttps://i.imgur.com/NeL0K4N.png" alt="" />
+            </motion.div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <div className='w-full h-full flex flex-col items-center justify-center gap-16 sm:h-screen bg-white pt-20'>
+        <motion.div
+          initial={{ opacity: 0,  y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, ease: "easeOut" }}
+          viewport={{ once: true, amount: 0.3 }}
+          className='flex flex-col items-center justify-center bg-gradient-to-t from-gray-700 via-gray-600 to-gray-400 bg-clip-text text-transparent font-extrabold text-2xl lg:text-6xl sm:text-4xl'
+        >
+          <h2>Train Hard. Track Results.</h2>
+          <h2>Transform Your Fitness Journey.</h2>
+        </motion.div>
+        <div>
+          <FeatureCards />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+
+
+{
+  "exercises": {
+    "chest": [
+      {
+        "name": "Bench Press",
+        "muscle": "Chest",
+        "gif_url": "https://example.com/bench_press.gif",
+        "description1": "Lie back on a flat bench, hold the barbell with a shoulder-width grip.",
+        "description2": "Lower the bar to your chest, then press it back up until arms are extended."
+      },
+      {
+        "name": "Incline Dumbbell Press",
+        "muscle": "Upper Chest",
+        "gif_url": "https://example.com/incline_dumbbell_press.gif",
+        "description1": "Sit on an incline bench with dumbbells at shoulder level.",
+        "description2": "Press the dumbbells upward until arms are extended, then lower slowly."
+      },
+      {
+        "name": "Push-Up",
+        "muscle": "Chest",
+        "gif_url": "https://example.com/push_up.gif",
+        "description1": "Place hands shoulder-width apart, body straight from head to heels.",
+        "description2": "Lower body until chest nearly touches the floor, then push back up."
+      },
+      {
+        "name": "Chest Fly",
+        "muscle": "Chest",
+        "gif_url": "https://example.com/chest_fly.gif",
+        "description1": "Lie back on a bench, holding dumbbells above your chest.",
+        "description2": "Open arms out to the sides, then bring them back together over chest."
+      },
+      {
+        "name": "Cable Crossover",
+        "muscle": "Chest",
+        "gif_url": "https://example.com/cable_crossover.gif",
+        "description1": "Stand between cable machines, handles at shoulder height.",
+        "description2": "Bring handles together in front, then slowly return to start."
+      },
+      {
+        "name": "Decline Bench Press",
+        "muscle": "Lower Chest",
+        "gif_url": "https://example.com/decline_bench_press.gif",
+        "description1": "Lie on a decline bench, grip barbell slightly wider than shoulder-width.",
+        "description2": "Lower bar to chest, then press back up."
+      },
+      {
+        "name": "Pec Deck Machine",
+        "muscle": "Chest",
+        "gif_url": "https://example.com/pec_deck_machine.gif",
+        "description1": "Sit at pec deck machine, arms at 90-degree angle.",
+        "description2": "Bring handles together in front, then open back to sides."
+      },
+      {
+        "name": "Dips",
+        "muscle": "Chest",
+        "gif_url": "https://example.com/dips.gif",
+        "description1": "Grasp parallel bars, lean forward slightly.",
+        "description2": "Lower body by bending elbows, then push back up."
+      },
+      {
+        "name": "Incline Chest Fly",
+        "muscle": "Upper Chest",
+        "gif_url": "https://example.com/incline_chest_fly.gif",
+        "description1": "Sit on an incline bench, holding dumbbells above chest.",
+        "description2": "Lower arms to the sides, then bring back together over chest."
+      },
+      {
+        "name": "Close-Grip Push-Up",
+        "muscle": "Chest",
+        "gif_url": "https://example.com/close_grip_push_up.gif",
+        "description1": "Place hands close together, under chest with body straight.",
+        "description2": "Lower body until chest nearly touches hands, then push back up."
+      }
+    ],
+    "back": [
+      {
+        "name": "Pull-Up",
+        "muscle": "Back",
+        "gif_url": "https://example.com/pull_up.gif",
+        "description1": "Grip the bar with hands slightly wider than shoulder-width.",
+        "description2": "Pull yourself up until chin is above the bar, then lower back down."
+      },
+      {
+        "name": "Lat Pulldown",
+        "muscle": "Back",
+        "gif_url": "https://example.com/lat_pulldown.gif",
+        "description1": "Sit at a lat pulldown machine with a wide grip on the bar.",
+        "description2": "Pull bar down to chest, then slowly return to start position."
+      },
+      {
+        "name": "Bent Over Row",
+        "muscle": "Back",
+        "gif_url": "https://example.com/bent_over_row.gif",
+        "description1": "Hold a barbell, bend forward with knees slightly bent.",
+        "description2": "Pull bar toward abdomen, then lower it back down."
+      },
+      {
+        "name": "Deadlift",
+        "muscle": "Back",
+        "gif_url": "https://example.com/deadlift.gif",
+        "description1": "Stand with feet hip-width apart, grip barbell just outside knees.",
+        "description2": "Lift bar by straightening legs and back, then lower."
+      },
+      {
+        "name": "Seated Cable Row",
+        "muscle": "Back",
+        "gif_url": "https://example.com/seated_cable_row.gif",
+        "description1": "Sit at cable machine, hold handle with a straight back.",
+        "description2": "Pull handle to chest, squeezing shoulder blades, then return."
+      },
+      {
+        "name": "T-Bar Row",
+        "muscle": "Back",
+        "gif_url": "https://example.com/t_bar_row.gif",
+        "description1": "Position yourself on T-bar row machine, feet planted.",
+        "description2": "Pull handle to chest, keeping elbows close, then lower."
+      },
+      {
+        "name": "Face Pull",
+        "muscle": "Back",
+        "gif_url": "https://example.com/face_pull.gif",
+        "description1": "Attach rope handle to cable, pull towards face.",
+        "description2": "Keep elbows high, squeeze shoulder blades, then return."
+      },
+      {
+        "name": "Single-Arm Dumbbell Row",
+        "muscle": "Back",
+        "gif_url": "https://example.com/single_arm_dumbbell_row.gif",
+        "description1": "Place one knee on bench, holding dumbbell with opposite arm.",
+        "description2": "Pull dumbbell to waist, then lower back down."
+      },
+      {
+        "name": "Superman",
+        "muscle": "Lower Back",
+        "gif_url": "https://example.com/superman.gif",
+        "description1": "Lie face down, arms extended overhead.",
+        "description2": "Lift arms and legs off floor, hold briefly, then lower."
+      },
+      {
+        "name": "Reverse Fly",
+        "muscle": "Back",
+        "gif_url": "https://example.com/reverse_fly.gif",
+        "description1": "Hold dumbbells, bend forward with knees slightly bent.",
+        "description2": "Open arms out to the sides, then lower back."
+      }
+    ],
+    "legs": [
+      {
+        "name": "Squat",
+        "muscle": "Legs",
+        "gif_url": "https://example.com/squat.gif",
+        "description1": "Stand with feet shoulder-width apart, barbell on shoulders.",
+        "description2": "Bend knees and lower hips, then push back up."
+      },
+      {
+        "name": "Lunges",
+        "muscle": "Legs",
+        "gif_url": "https://example.com/lunges.gif",
+        "description1": "Step forward, lowering hips until knees form 90-degree angles.",
+        "description2": "Push back up, alternating legs."
+      },
+      {
+        "name": "Leg Press",
+        "muscle": "Legs",
+        "gif_url": "https://example.com/leg_press.gif",
+        "description1": "Sit on leg press machine, feet shoulder-width apart.",
+        "description2": "Push the platform up until legs are nearly straight, then lower."
+      },
+      {
+        "name": "Calf Raise",
+        "muscle": "Calves",
+        "gif_url": "https://example.com/calf_raise.gif",
+        "description1": "Stand on an elevated surface with toes, heels hanging off.",
+        "description2": "Raise up on toes, hold briefly, then lower heels."
+      },
+      {
+        "name": "Leg Curl",
+        "muscle": "Hamstrings",
+        "gif_url": "https://example.com/leg_curl.gif",
+        "description1": "Lie face down on leg curl machine, grip handles.",
+        "description2": "Curl legs towards your glutes, then lower slowly."
+      },
+      {
+        "name": "Leg Extension",
+        "muscle": "Quadriceps",
+        "gif_url": "https://example.com/leg_extension.gif",
+        "description1": "Sit on leg extension machine, feet under pad.",
+        "description2": "Extend legs to lift pad, then lower slowly."
+      },
+      {
+        "name": "Bulgarian Split Squat",
+        "muscle": "Legs",
+        "gif_url": "https://example.com/bulgarian_split_squat.gif",
+        "description1": "Stand in a split stance with back foot elevated.",
+        "description2": "Lower body until front thigh is parallel to floor, then push up."
+      },
+      {
+        "name": "Step-Up",
+        "muscle": "Legs",
+        "gif_url": "https://example.com/step_up.gif",
+        "description1": "Step onto a bench with one leg, driving through heel.",
+        "description2": "Lift opposite leg, then step back down."
+      },
+      {
+        "name": "Glute Bridge",
+        "muscle": "Glutes",
+        "gif_url": "https://example.com/glute_bridge.gif",
+        "description1": "Lie on back, knees bent, feet flat on floor.",
+        "description2": "Lift hips to create a straight line, then lower."
+      },
+      {
+        "name": "Romanian Deadlift",
+        "muscle": "Hamstrings",
+        "gif_url": "https://example.com/romanian_deadlift.gif",
+        "description1": "Hold barbell with overhand grip, feet hip-width apart.",
+        "description2": "Lower bar by hinging at hips, then return to start."
+      }
+    ],
+    "shoulders": [
+      {
+        "name": "Overhead Press",
+        "muscle": "Shoulders",
+        "gif_url": "https://example.com/overhead_press.gif",
+        "description1": "Stand with feet shoulder-width apart, holding a barbell at shoulder height.",
+        "description2": "Press the barbell overhead until arms are fully extended, then lower."
+      },
+      {
+        "name": "Lateral Raise",
+        "muscle": "Shoulders",
+        "gif_url": "https://example.com/lateral_raise.gif",
+        "description1": "Hold dumbbells at your sides with a slight bend in elbows.",
+        "description2": "Lift arms to the sides until parallel to the floor, then lower."
+      },
+      {
+        "name": "Front Raise",
+        "muscle": "Shoulders",
+        "gif_url": "https://example.com/front_raise.gif",
+        "description1": "Hold a dumbbell in each hand with arms by your sides.",
+        "description2": "Lift one arm straight forward to shoulder height, then lower."
+      },
+      {
+        "name": "Rear Delt Fly",
+        "muscle": "Rear Shoulders",
+        "gif_url": "https://example.com/rear_delt_fly.gif",
+        "description1": "Bend forward with dumbbells, arms hanging down.",
+        "description2": "Raise arms out to sides, focusing on shoulder blades."
+      },
+      {
+        "name": "Arnold Press",
+        "muscle": "Shoulders",
+        "gif_url": "https://example.com/arnold_press.gif",
+        "description1": "Hold dumbbells at shoulder height with palms facing you.",
+        "description2": "Rotate arms as you press upward, ending with palms facing out."
+      },
+      {
+        "name": "Face Pull",
+        "muscle": "Rear Shoulders",
+        "gif_url": "https://example.com/face_pull.gif",
+        "description1": "Pull the cable towards your face, keeping elbows high.",
+        "description2": "Squeeze shoulder blades together, then return to start."
+      },
+      {
+        "name": "Upright Row",
+        "muscle": "Shoulders",
+        "gif_url": "https://example.com/upright_row.gif",
+        "description1": "Hold barbell in front of thighs, hands close together.",
+        "description2": "Lift bar towards chin, keeping elbows higher than wrists."
+      },
+      {
+        "name": "Shrugs",
+        "muscle": "Shoulders",
+        "gif_url": "https://example.com/shrugs.gif",
+        "description1": "Hold dumbbells at your sides, shoulders relaxed.",
+        "description2": "Lift shoulders toward ears, then lower back down."
+      },
+      {
+        "name": "Dumbbell Press",
+        "muscle": "Shoulders",
+        "gif_url": "https://example.com/dumbbell_press.gif",
+        "description1": "Sit on a bench, press dumbbells from shoulders to overhead.",
+        "description2": "Lower weights back to shoulder height."
+      },
+      {
+        "name": "Cable Lateral Raise",
+        "muscle": "Shoulders",
+        "gif_url": "https://example.com/cable_lateral_raise.gif",
+        "description1": "Stand with cable machine handle in one hand at thigh level.",
+        "description2": "Raise arm to side until shoulder height, then lower."
+      }
+    ],
+    "arms": [
+      {
+        "name": "Bicep Curl",
+        "muscle": "Biceps",
+        "gif_url": "https://example.com/bicep_curl.gif",
+        "description1": "Hold dumbbells with palms facing up, arms by sides.",
+        "description2": "Curl weights toward shoulders, then lower."
+      },
+      {
+        "name": "Hammer Curl",
+        "muscle": "Biceps",
+        "gif_url": "https://example.com/hammer_curl.gif",
+        "description1": "Hold dumbbells with palms facing each other.",
+        "description2": "Curl weights to shoulder level, then lower."
+      },
+      {
+        "name": "Tricep Pushdown",
+        "muscle": "Triceps",
+        "gif_url": "https://example.com/tricep_pushdown.gif",
+        "description1": "Grip cable bar, elbows by sides.",
+        "description2": "Push bar down until arms are straight, then return."
+      },
+      {
+        "name": "Skull Crusher",
+        "muscle": "Triceps",
+        "gif_url": "https://example.com/skull_crusher.gif",
+        "description1": "Lie on bench with barbell, lower to forehead.",
+        "description2": "Extend arms to return to start."
+      },
+      {
+        "name": "Concentration Curl",
+        "muscle": "Biceps",
+        "gif_url": "https://example.com/concentration_curl.gif",
+        "description1": "Sit with dumbbell in one hand, elbow on inner thigh.",
+        "description2": "Curl weight to shoulder, then lower."
+      },
+      {
+        "name": "Overhead Tricep Extension",
+        "muscle": "Triceps",
+        "gif_url": "https://example.com/overhead_tricep_extension.gif",
+        "description1": "Hold dumbbell overhead with both hands.",
+        "description2": "Lower behind head, then extend arms."
+      },
+      {
+        "name": "Preacher Curl",
+        "muscle": "Biceps",
+        "gif_url": "https://example.com/preacher_curl.gif",
+        "description1": "Sit at preacher bench, hold barbell with underhand grip.",
+        "description2": "Curl bar toward shoulders, then lower."
+      },
+      {
+        "name": "Kickback",
+        "muscle": "Triceps",
+        "gif_url": "https://example.com/kickback.gif",
+        "description1": "Hold dumbbell, lean forward, arm bent at 90 degrees.",
+        "description2": "Extend arm behind, then return."
+      },
+      {
+        "name": "Reverse Curl",
+        "muscle": "Forearms",
+        "gif_url": "https://example.com/reverse_curl.gif",
+        "description1": "Hold barbell with overhand grip.",
+        "description2": "Curl bar to shoulder level, then lower."
+      },
+      {
+        "name": "Close Grip Bench Press",
+        "muscle": "Triceps",
+        "gif_url": "https://example.com/close_grip_bench_press.gif",
+        "description1": "Lie on bench, hands close together on barbell.",
+        "description2": "Lower to chest, then press up."
+      }
+    ],
+    "core": [
+      {
+        "name": "Crunch",
+        "muscle": "Abs",
+        "gif_url": "https://example.com/crunch.gif",
+        "description1": "Lie on your back with knees bent, hands behind head.",
+        "description2": "Lift shoulders off floor, then lower."
+      },
+      {
+        "name": "Leg Raise",
+        "muscle": "Lower Abs",
+        "gif_url": "https://example.com/leg_raise.gif",
+        "description1": "Lie on back with legs straight.",
+        "description2": "Lift legs to vertical, then lower slowly."
+      },
+      {
+        "name": "Bicycle Crunch",
+        "muscle": "Abs",
+        "gif_url": "https://example.com/bicycle_crunch.gif",
+        "description1": "Lie on back, knees bent, hands behind head.",
+        "description2": "Bring elbow to opposite knee in a cycling motion."
+      },
+      {
+        "name": "Plank",
+        "muscle": "Core",
+        "gif_url": "https://example.com/plank.gif",
+        "description1": "Hold body in a straight line on forearms and toes.",
+        "description2": "Keep core tight and hold position."
+      },
+      {
+        "name": "Russian Twist",
+        "muscle": "Obliques",
+        "gif_url": "https://example.com/russian_twist.gif",
+        "description1": "Sit on floor, lean back, twist torso side to side.",
+        "description2": "Hold a weight for added resistance."
+      },
+    ]
+  }
+}
+
+import React from 'react';
+import exercisesData from './exercises.json';
+
+const ExerciseList = () => {
+  return (
+    <div>
+      {Object.keys(exercisesData.exercises).map((muscleGroup) => (
+        <div key={muscleGroup}>
+          <h2>{muscleGroup.charAt(0).toUpperCase() + muscleGroup.slice(1)} Exercises</h2>
+          <ul>
+            {exercisesData.exercises[muscleGroup].map((exercise, index) => (
+              <li key={index}>
+                <h3>{exercise.name}</h3>
+                <p><strong>Primary Muscle:</strong> {exercise.muscle}</p>
+                <p>{exercise.description1}</p>
+                <p>{exercise.description2}</p>
+                <img src={exercise.gif_url} alt={`${exercise.name} demo`} />
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+  );
+};
+
+export default ExerciseList;
+
+
+h-40 w-full object-cover rounded-lg shadow-md md:h-60
+
+relative p-4 bg-white shadow-lg rounded-lg flex items-center justify-center max-w-xs mx-auto
+
+
+
+<div>
+                <img className='h-6 w-6' src="https://i.imgur.com/AcI7mp0.png" alt="" />
+                <h2 className="text-3xl font-bold mt-4">Workout Plans</h2>
+              </div>
+
+
+
+ <div className="w-96 h-80 bg-white shadow-2xl rounded-3xl p-6 flex flex-col items-center justify-between text-center">
+            <div className=" w-12 h-12">
+              <img src="https://i.imgur.com/zjMIj9i.gif" alt="" />
+              </div>
+              <h2 className="text-3xl font-bold mt-4">Workout Plans</h2>
+              <p className="text-gray-600 mt-2">Choose from expertly designed workout plans to achieve your fitness goals, whether building strength or endurance.</p>
+              <button className="mt-4 bg-black text-white px-4 py-2 rounded-lg hover:bg-gray-600 gray-600  transition">Get Started</button>
+            </div>
+
+            <div className="w-96 h-80 bg-white shadow-2xl rounded-3xl p-6 flex flex-col items-center justify-between text-center">
+            <div className=" w-12 h-12">
+              <img src="https://i.imgur.com/0qgxPQ8.gif" alt="" />  
+              </div>
+              <h2 className="text-3xl font-bold mt-4">Custom Plans</h2>
+              <p className="text-gray-600 mt-2">Build personalized workout plans tailored to your fitness level, goals, and schedule.</p>
+              <button className="mt-4 bg-black text-white px-4 py-2 rounded-lg hover:bg-gray-600  transition">Create Plan</button>
+            </div>
+
