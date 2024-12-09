@@ -11,7 +11,7 @@ import { WorldMapDemo } from "@/components/magicui/World_Map";
 export default function Home() {
   return (
     <main className="bg-black text-white flex flex-col ">
-      <Hero/>
+      <Hero />
       <Business/>
       <Skills/>
       <div className="relative z-50 ">
