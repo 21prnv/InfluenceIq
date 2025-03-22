@@ -1,10 +1,33 @@
-import { Gallery4, Gallery4Props } from "./gallery4";
+"use client";
 
-const demoData: Gallery4Props = {
+import { ArrowLeft, ArrowRight } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
+import {
+  Carousel,
+  CarouselApi,
+  CarouselContent,
+  CarouselItem,
+} from "@/components/ui/carousel";
+
+export interface ProfileGalleryItem {
+  id: string;
+  title: string;
+  description: string;
+  href: string;
+  image: string;
+}
+
+export interface ProfileGalleryProps {
+  title?: string;
+  description?: string;
+  items: ProfileGalleryItem[];
+}
+
+const demoData: ProfileGalleryProps = {
   title: "Top Creators",
-  description:
-    "",
-    items : [
+  description: "",
+  items: [
     {
       "id": "carryminati",
       "title": "CarryMinati: The King of Indian Roasting",
@@ -43,8 +66,138 @@ const demoData: Gallery4Props = {
   ]
 };
 
-function Gallery4Demo() {
-  return <Gallery4 {...demoData} />;
+const ProfileGallery = ({
+  title = "Top Creators",
+  description = "",
+  items = [],
+}: ProfileGalleryProps) => {
+  const [carouselApi, setCarouselApi] = useState<CarouselApi>();
+  const [canScrollPrev, setCanScrollPrev] = useState(false);
+  const [canScrollNext, setCanScrollNext] = useState(false);
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  useEffect(() => {
+    if (!carouselApi) {
+      return;
+    }
+    const updateSelection = () => {
+      setCanScrollPrev(carouselApi.canScrollPrev());
+      setCanScrollNext(carouselApi.canScrollNext());
+      setCurrentSlide(carouselApi.selectedScrollSnap());
+    };
+    updateSelection();
+    carouselApi.on("select", updateSelection);
+    return () => {
+      carouselApi.off("select", updateSelection);
+    };
+  }, [carouselApi]);
+
+  return (
+    <section className="py-16 px-4 md:px-8 lg:px-32">
+      <div className="container mx-auto">
+        <div className="mb-8 flex items-end justify-between md:mb-14 lg:mb-16">
+          <div className="flex flex-col gap-4">
+            <h2 className="text-3xl font-medium md:text-4xl lg:text-5xl text-white">
+              {title}
+            </h2>
+            <p className="max-w-lg text-zinc-400">
+              Browse our rankings of the most influential content creators.
+              Numbers indicate their position based on popularity and engagement.
+            </p>
+          </div>
+          <div className="hidden shrink-0 gap-2 md:flex">
+            <Button
+              size="icon"
+              variant="ghost"
+              onClick={() => {
+                carouselApi?.scrollPrev();
+              }}
+              disabled={!canScrollPrev}
+              className="disabled:pointer-events-auto text-white"
+            >
+              <ArrowLeft className="size-5" />
+            </Button>
+            <Button
+              size="icon"
+              variant="ghost"
+              onClick={() => {
+                carouselApi?.scrollNext();
+              }}
+              disabled={!canScrollNext}
+              className="disabled:pointer-events-auto text-white"
+            >
+              <ArrowRight className="size-5" />
+            </Button>
+          </div>
+        </div>
+      </div>
+      <div className="w-full">
+        <Carousel
+          setApi={setCarouselApi}
+          opts={{
+            breakpoints: {
+              "(max-width: 768px)": {
+                dragFree: true,
+              },
+            },
+          }}
+        >
+          <CarouselContent className="ml-0">
+            {items.map((item, index) => (
+              <CarouselItem
+                key={item.id}
+                className="max-w-[280px] pl-[20px] md:max-w-[300px] lg:max-w-[330px]"
+              >
+                <a href={item.href} className="group block">
+                  <div className="relative overflow-hidden rounded-xl aspect-[4/5] border border-zinc-700 group-hover:border-zinc-500 transition-all duration-300">
+                    {/* Creator Image */}
+                    <img
+                      src={item.image}
+                      alt={item.title}
+                      className="absolute inset-0 h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-110"
+                    />
+                    
+                    {/* Overlay Gradient */}
+                    <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/80" />
+                    
+                    {/* Ranking Number */}
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <span className="text-[120px] md:text-[150px] font-black text-white opacity-80 transform -translate-y-4 drop-shadow-[0_4px_8px_rgba(0,0,0,0.8)]">
+                        {index + 1}
+                      </span>
+                    </div>
+                    
+                    {/* Creator Name */}
+                    <div className="absolute bottom-0 w-full p-4 text-center">
+                      <h3 className="text-xl font-semibold text-white truncate">{item.title.split(':')[0]}</h3>
+                    </div>
+                  </div>
+                </a>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+        </Carousel>
+        {items.length > 0 && (
+          <div className="mt-6 flex justify-center gap-2">
+            {items.map((_, index) => (
+              <button
+                key={index}
+                className={`h-2 w-2 rounded-full transition-colors ${
+                  currentSlide === index ? "bg-white" : "bg-zinc-700"
+                }`}
+                onClick={() => carouselApi?.scrollTo(index)}
+                aria-label={`Go to slide ${index + 1}`}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+    </section>
+  );
+};
+
+function ProfileGalleryDemo() {
+  return <ProfileGallery {...demoData} />;
 }
 
-export { Gallery4Demo };
+export { ProfileGalleryDemo };

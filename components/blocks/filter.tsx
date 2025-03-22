@@ -27,7 +27,7 @@ const Filter = () => {
   const formatCreatorsData = (): FilterGalleryItem[] => {
     return creators.map(creator => ({
       id: creator.id,
-      title: creator.title,
+      title: creator.name,
       description: creator.description,
       href: creator.href,
       image: creator.image
@@ -45,7 +45,7 @@ const Filter = () => {
         .filter(creator => creator.category === activeCategory)
         .map(creator => ({
           id: creator.id,
-          title: creator.title,
+          title: creator.name,
           description: creator.description,
           href: creator.href,
           image: creator.image
@@ -56,16 +56,21 @@ const Filter = () => {
   }, [activeCategory]);
   
   return (
-    <div className="py-12 px-4 md:px-10 bg-[#0D0D0D]">
+    <div className="py-12 px-4 md:px-10">
       {/* Filter Buttons */}
-      <div className="container px-24 mb-10">
+      <div className="container px-4 md:px-12 lg:px-24 mb-10">
         <h2 className="text-3xl py-4 font-medium md:text-4xl lg:text-5xl text-white mb-6">
-          Explore Top Creators
+          Top Creator Rankings
         </h2>
+        
+        <p className="text-zinc-400 mb-8 max-w-3xl">
+          Browse the rankings of the most influential content creators across various categories. 
+          Numbers indicate their position in our rankings based on popularity and engagement.
+        </p>
         
         <div className="flex flex-wrap gap-3 md:gap-4 mb-2">
           <div className="w-full overflow-x-auto pb-4 scrollbar-hide">
-            <div className="flex space-x-4 space-y-4 md:flex-wrap">
+            <div className="flex space-x-4 md:flex-wrap">
               {categories.map((category) => (
                 <Button
                   key={category}
@@ -88,8 +93,7 @@ const Filter = () => {
       {/* Gallery Component */}
       {filteredItems.length > 0 ? (
         <FilterGallery
-          title={`${activeCategory === "All" ? "All Creators" : activeCategory + " Creators"}`}
-          description={`Explore our collection of ${activeCategory === "All" ? "amazing" : activeCategory} content creators and their inspiring work.`}
+          title={`${activeCategory === "All" ? "Top Creators" : "Top " + activeCategory + " Creators"}`}
           items={filteredItems}
         />
       ) : (
@@ -100,7 +104,7 @@ const Filter = () => {
             variant="outline"
             className="mt-4 border-zinc-700 text-zinc-400 hover:border-zinc-500 hover:text-zinc-200"
           >
-            View All Creators
+            View All Creator Rankings
           </Button>
         </div>
       )}

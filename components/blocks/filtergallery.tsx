@@ -93,30 +93,33 @@ const FilterGallery = ({
           }}
         >
           <CarouselContent className="ml-0">
-            {items.map((item) => (
+            {items.map((item, index) => (
               <CarouselItem
                 key={item.id}
-                className="max-w-[300px] pl-[20px] md:max-w-[320px] lg:max-w-[360px]"
+                className="max-w-[280px] pl-[20px] md:max-w-[300px] lg:max-w-[330px]"
               >
-                <a href={item.href} className="group rounded-xl">
-                  <div className="group relative h-full min-h-[25rem] max-w-full overflow-hidden rounded-xl md:aspect-[5/4] lg:aspect-[4/3] border border-zinc-700">
+                <a href={item.href} className="group block">
+                  <div className="relative overflow-hidden rounded-xl aspect-[4/5] border border-zinc-700 group-hover:border-zinc-500 transition-all duration-300">
+                    {/* Creator Image */}
                     <img
                       src={item.image}
                       alt={item.title}
-                      className="absolute h-full w-full object-cover object-center transition-transform duration-300 group-hover:scale-105"
+                      className="absolute inset-0 h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-110"
                     />
-                    <div className="absolute inset-0 h-full bg-[linear-gradient(hsl(var(--primary)/0),hsl(var(--primary)/0.4),hsl(var(--primary)/0.8)_100%)] mix-blend-multiply" />
-                    <div className="absolute inset-x-0 bottom-0 flex flex-col items-start p-6 text-primary-foreground md:p-8">
-                      <div className="mb-2 pt-4 text-xl font-semibold md:mb-3 md:pt-4 lg:pt-4">
-                        {item.title}
-                      </div>
-                      <div className="mb-8 line-clamp-2 md:mb-10">
-                        {item.description}
-                      </div>
-                      <div className="flex items-center text-sm">
-                        View Profile{" "}
-                        <ArrowRight className="ml-2 size-5 transition-transform group-hover:translate-x-1" />
-                      </div>
+                    
+                    {/* Overlay Gradient */}
+                    <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/80" />
+                    
+                    {/* Ranking Number */}
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <span className="text-[120px] md:text-[150px] font-black text-white opacity-80 transform -translate-y-4 drop-shadow-[0_4px_8px_rgba(0,0,0,0.8)]">
+                        {index + 1}
+                      </span>
+                    </div>
+                    
+                    {/* Creator Name */}
+                    <div className="absolute bottom-0 w-full p-4 text-center">
+                      <h3 className="text-xl font-semibold text-white truncate">{item.title.split(':')[0]}</h3>
                     </div>
                   </div>
                 </a>
