@@ -4,7 +4,6 @@ import { StatCard } from "@/components/ui/stat-card"
 import { RecentSales } from "@/components/ui/recent-sales"
 import { OverviewChart } from "@/components/ui/overview-chart"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Waves } from "@/components/ui/waves-background"
 
 const overviewData = [
   { name: "Jan", total: 4500 },
@@ -52,9 +51,6 @@ const recentSales = [
 export default function DashboardPage() {
   return (
     <div className="relative min-h-screen bg-black">
-      <div className="absolute inset-0 opacity-30">
-        <Waves className="h-full" />
-      </div>
       
       <div className="relative z-10 flex-1 space-y-4 p-8 pt-6">
         <div className="flex items-center justify-between">
