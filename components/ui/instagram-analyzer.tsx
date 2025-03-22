@@ -29,6 +29,7 @@ export function InstagramAnalyzer({ onSubmit }: InstagramSearchProps) {
             className="flex-1 px-4 py-3 rounded-xl bg-gray-900/50 backdrop-blur-sm border border-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-transparent"
           />
           <StarBorder
+            as="div"
             className="md:w-auto w-full"
             color="hsl(var(--primary))"
           >
