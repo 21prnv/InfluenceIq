@@ -1,8 +1,8 @@
 'use client';
 
-import { useState } from 'react';
-import { Loader2, Download, Instagram, Search } from 'lucide-react';
+import { useState, useEffect } from 'react';
 import InfluencerAnalysis from './InfluencerAnalysis';
+import { analyzeInfluencerData, InfluencerAnalysis as AnalysisData } from '../utils/geminiApi';
 
 interface SearchResult {
   success: boolean;
@@ -14,10 +14,13 @@ interface SearchResult {
 
 export default function InstagramSearch() {
   const [username, setUsername] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [result, setResult] = useState<SearchResult | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [showAnalysis, setShowAnalysis] = useState(false);
+  const [analysis, setAnalysis] = useState<AnalysisData | null>(null);
+  // Get API key from environment variable
+  const apiKey = process.env.NEXT_PUBLIC_GEMINI_API_KEY || '';
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -26,199 +29,156 @@ export default function InstagramSearch() {
       setError('Please enter an Instagram username');
       return;
     }
-
+    
+    setIsLoading(true);
+    setError(null);
+    setResult(null);
+    setAnalysis(null);
+    
     try {
-      setLoading(true);
-      setError(null);
-      setResult(null);
-      setShowAnalysis(false);
-      
-      const response = await fetch('http://localhost:3001/api/scrape', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ username: username.trim() }),
-      });
-
+      const response = await fetch(`/api/scrape?username=${encodeURIComponent(username)}`);
       const data = await response.json();
       
-      if (!response.ok) {
-        throw new Error(data.message || data.error || 'Failed to scrape Instagram data');
+      setResult(data);
+      
+      if (!data.success) {
+        setError(data.message || 'Failed to scrape Instagram data');
+      } else if (data.results && data.results.length > 0) {
+        // Auto start the analysis if data was scraped successfully
+        await handleAnalyze(data.results);
       }
-      
-      // Create a full filename for use in other places
-      const fullFilename = data.filename || `${username}_instagram_reels.json`;
-      
-      // Set the result with the explicit filename
-      setResult({
-        ...data,
-        filename: fullFilename
-      });
-      
-      console.log('Received data:', data);
-      setShowAnalysis(true); // Set to true after successful scraping
     } catch (err) {
+      setError('An error occurred while processing your request. Please try again.');
       console.error('Error:', err);
-      setError(err instanceof Error ? err.message : 'An unknown error occurred');
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
-  const downloadJson = () => {
-    if (result?.filename) {
-      window.open(`/temp/${result.filename}`, '_blank');
+  const handleAnalyze = async (resultsData?: any[]) => {
+    if ((!result?.results && !resultsData) || !apiKey) {
+      setError('Unable to analyze the data. The API key may be missing.');
+      return;
+    }
+    
+    setIsAnalyzing(true);
+    setError(null);
+    
+    try {
+      const dataToAnalyze = resultsData || result?.results || [];
+      const analysisResult = await analyzeInfluencerData(
+        apiKey,
+        username,
+        dataToAnalyze
+      );
+      
+      if (analysisResult) {
+        setAnalysis(analysisResult);
+      } else {
+        setError('Failed to analyze the data. The analysis service may be temporarily unavailable.');
+      }
+    } catch (err) {
+      setError('An error occurred during analysis. Please try again later.');
+      console.error('Analysis error:', err);
+    } finally {
+      setIsAnalyzing(false);
     }
   };
 
   return (
-    <div className="max-w-3xl mx-auto">
-      <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-        <div className="bg-gradient-to-r from-purple-600 to-pink-500 p-6">
-          <div className="flex items-center justify-center mb-4">
-            <Instagram className="w-8 h-8 text-white mr-2" />
-            <h2 className="text-2xl font-bold text-white">Instagram Reels Scraper</h2>
-          </div>
-          <p className="text-white/80 text-center text-sm">
-            Quickly extract and download reels data from any public Instagram profile
-          </p>
-        </div>
-        
-        <div className="p-6">
-          <form onSubmit={handleSubmit} className="mb-6">
+    <div className="max-w-4xl mx-auto">
+      <div className="bg-white p-6 rounded-lg shadow-md">
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-1">
+              Instagram Username
+            </label>
             <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <Search className="h-5 w-5 text-gray-400" />
-              </div>
+              <span className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-gray-500">
+                @
+              </span>
               <input
                 type="text"
+                id="username"
+                placeholder="username"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg text-gray-900 shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                placeholder="Enter Instagram username without @"
-                disabled={loading}
+                className="block w-full pl-8 pr-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none text-gray-900 focus:ring-indigo-500 focus:border-indigo-500"
+                disabled={isLoading || isAnalyzing}
               />
             </div>
-            
-            <button
-              type="submit"
-              disabled={loading}
-              className={`mt-4 w-full px-4 py-3 rounded-lg text-white font-medium transition-all duration-200 flex items-center justify-center ${
-                loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-purple-600 hover:bg-purple-700'
-              }`}
-            >
-              {loading ? (
-                <>
-                  <Loader2 className="animate-spin mr-2 h-5 w-5" />
-                  Scraping...
-                </>
-              ) : (
-                <>
-                  <Search className="mr-2 h-5 w-5" />
-                  Scrape Reels
-                </>
-              )}
-            </button>
-          </form>
-
-          {error && (
-            <div className="p-4 bg-red-50 border-l-4 border-red-500 rounded-md mb-4">
-              <div className="flex">
-                <div className="ml-3">
-                  <p className="text-sm text-red-700">
-                    {error}
-                  </p>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {loading && (
-            <div className="text-center py-8 space-y-2">
-              <div className="flex justify-center">
-                <Loader2 className="h-8 w-8 text-purple-500 animate-spin" />
-              </div>
-              <p className="text-gray-700 font-medium">Scraping Instagram reels for @{username}...</p>
-              <p className="text-sm text-gray-500">This might take a few minutes depending on the number of reels</p>
-            </div>
-          )}
-
-          {result && (
-            <div className="mt-6 rounded-lg overflow-hidden border border-green-200">
-              <div className="bg-green-50 p-4">
-                <h3 className="font-semibold text-green-800">{result.message}</h3>
-              </div>
-              
-              {result.filename && (
-                <div className="p-4 bg-white border-t border-green-100">
-                  <button
-                    onClick={downloadJson}
-                    className="w-full flex items-center justify-center px-4 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-200"
-                  >
-                    <Download className="mr-2 h-5 w-5" />
-                    Download JSON Data
-                  </button>
-                </div>
-              )}
-              
-              {result.results && result.results.length > 0 && (
-                <div className="p-4 bg-white border-t border-green-100">
-                  <p className="font-medium text-gray-700 mb-2">Preview of first reel:</p>
-                  <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
-                    <div className="flex items-start space-x-2">
-                      <div className="flex-shrink-0">
-                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
-                          <Instagram className="h-6 w-6 text-white" />
-                        </div>
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-gray-900 truncate">
-                          <a 
-                            href={result.results[0].reelUrl} 
-                            target="_blank" 
-                            rel="noopener noreferrer"
-                            className="text-purple-600 hover:underline">
-                            {result.results[0].reelUrl}
-                          </a>
-                        </p>
-                        {result.results[0].caption && (
-                          <p className="text-sm text-gray-500 mt-1">
-                            {result.results[0].caption.substring(0, 100)}
-                            {result.results[0].caption.length > 100 ? '...' : ''}
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                  <p className="text-xs text-gray-500 mt-2 text-center">
-                    {result.results.length} reels found in total
-                  </p>
-                </div>
-              )}
-            </div>
-          )}
+          </div>
           
-          {/* Add the Gemini-powered analysis component */}
-          {showAnalysis && username && (
-            <>
-              <div className="my-6 border-t border-gray-200 pt-6">
-                <h3 className="text-xl font-semibold text-center text-gray-900 mb-4">
-                  AI Analysis with Gemini
-                </h3>
-                <InfluencerAnalysis 
-                  username={username} 
-                  filename={result?.filename || `${username}_instagram_reels.json`}
-                />
+          <button
+            type="submit"
+            disabled={isLoading || isAnalyzing}
+            className={`w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white ${
+              isLoading || isAnalyzing
+                ? 'bg-indigo-400 cursor-not-allowed' 
+                : 'bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
+            }`}
+          >
+            {isLoading ? (
+              <span className="flex items-center justify-center">
+                <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                Scraping Instagram...
+              </span>
+            ) : isAnalyzing ? (
+              <span className="flex items-center justify-center">
+                <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                Analyzing Profile...
+              </span>
+            ) : (
+              'Scrape & Analyze Instagram Profile'
+            )}
+          </button>
+        </form>
+        
+        {error && (
+          <div className="mt-4 bg-red-50 border-l-4 border-red-400 p-4">
+            <div className="flex">
+              <div className="flex-shrink-0">
+                <svg className="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                </svg>
               </div>
-            </>
-          )}
-        </div>
+              <div className="ml-3">
+                <p className="text-sm text-red-700">{error}</p>
+              </div>
+            </div>
+          </div>
+        )}
+        
+        {result && result.success && !isAnalyzing && !analysis && (
+          <div className="mt-4 bg-green-50 border-l-4 border-green-400 p-4">
+            <div className="flex">
+              <div className="flex-shrink-0">
+                <svg className="h-5 w-5 text-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                </svg>
+              </div>
+              <div className="ml-3">
+                <p className="text-sm text-green-700">{result.message}</p>
+                <p className="text-sm text-green-600 mt-2">
+                  {result.results && `Found ${result.results.length} reels from @${username}`}
+                </p>
+                <p className="text-sm text-gray-600 mt-1">
+                  Analyzing profile data...
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
-      
-      <div className="mt-4 text-center text-xs text-gray-500">
-        <p>This tool is for educational purposes only. Please respect Instagram's Terms of Service.</p>
-      </div>
+
+      {/* Display analysis results if available */}
+      {analysis && <InfluencerAnalysis data={analysis} />}
     </div>
   );
 }
