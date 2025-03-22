@@ -26,7 +26,6 @@ const features = [
 export function Features() {
   return (
     <section className="py-24 relative bg-black">
-      <Waves className="absolute inset-0 opacity-30"/>
       <div className="max-w-7xl mx-auto px-4">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">

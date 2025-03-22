@@ -1,12 +1,10 @@
 import Link from "next/link"
 import { StarBorder } from "./star-border"
-import { Waves } from "./waves-background"
 
 export function Nav() {
   return (
     <nav className="relative bg-transparent border-b border-gray-800/30">
       <div className="absolute inset-0 opacity-30">
-        <Waves />
       </div>
       <div className="max-w-7xl mx-auto px-4">
         <div className="flex items-center justify-between h-16 relative z-10">
