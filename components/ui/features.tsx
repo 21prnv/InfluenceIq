@@ -1,3 +1,5 @@
+import { Waves } from "./waves-background"
+
 const features = [
   {
     icon: "⭐",
@@ -23,13 +25,14 @@ const features = [
 
 export function Features() {
   return (
-    <section className="py-24 bg-gray-50">
+    <section className="py-24 relative bg-black">
+      <Waves className="absolute inset-0 opacity-30"/>
       <div className="max-w-7xl mx-auto px-4">
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
             Redefining Digital Influence
           </h2>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+          <p className="text-lg text-gray-300 max-w-2xl mx-auto">
             Our comprehensive rating system goes beyond followers and likes to measure what truly matters
           </p>
         </div>
@@ -37,13 +40,13 @@ export function Features() {
           {features.map((feature) => (
             <div
               key={feature.title}
-              className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow"
+              className="bg-gray-800/50 backdrop-blur-sm border border-gray-700 p-6 rounded-xl hover:bg-gray-800/70 transition-colors"
             >
               <div className="text-4xl mb-4">{feature.icon}</div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">
+              <h3 className="text-xl font-semibold text-white mb-2">
                 {feature.title}
               </h3>
-              <p className="text-gray-600">{feature.description}</p>
+              <p className="text-gray-300">{feature.description}</p>
             </div>
           ))}
         </div>
