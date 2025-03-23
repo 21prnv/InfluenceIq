@@ -424,7 +424,7 @@ async function scrapeInstagramReels(username) {
 }
 
 // API Route
-app.post("/api/scrape-instagram", async (req, res) => {
+app.post("/api/scrape", async (req, res) => {
   try {
     const { username } = req.body;
     if (!username) {
