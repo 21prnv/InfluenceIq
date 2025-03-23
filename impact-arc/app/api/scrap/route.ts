@@ -1,29 +1,57 @@
-// server.js
-const express = require("express");
-const puppeteer = require("puppeteer");
-const { createClient } = require("@supabase/supabase-js");
-const cors = require("cors");
-require("dotenv").config();
 
-// Initialize Express app
-const app = express();
-app.use(cors()); // Enable CORS for all routes
-app.use(express.json());
+// app/api/scrape-instagram/route.ts
+import { createClient } from "@/utils/supbase/server";
+import { NextResponse } from "next/server";
+import puppeteer from "puppeteer-extra";
+import StealthPlugin from "puppeteer-extra-plugin-stealth";
 
 // Initialize Supabase client
-const supabaseUrl = process.env.SUPABASE_URL;
-const supabaseKey = process.env.SUPABASE_SERVICE_KEY;
-const supabase = createClient(supabaseUrl, supabaseKey);
 
-const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+// Apply StealthPlugin
+puppeteer.use(StealthPlugin());
+
+const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+// Interface for scraped data
+interface ReelData {
+  url: string;
+  thumbnail: string | null;
+  videoUrl: string | null;
+  caption: string;
+  likeCount: string;
+  postDate: string;
+  comments: { username: string; text: string; likes: string }[];
+}
+
+interface UserInfo {
+  username: string;
+  name: string;
+  bioText: string;
+  profileImage: string;
+  followers?: string;
+  following?: string;
+  posts?: string;
+  links: string[];
+}
+
+interface ScrapeResult {
+  userInfo: UserInfo;
+  reels: ReelData[];
+}
 
 // Function to fetch cookies from Supabase (specific row with id = 1)
-async function fetchCookiesFromSupabase() {
-  const { data, error } = await supabase
+async function fetchCookiesFromSupabase(): Promise<{
+  sessionid: string;
+} | null> {
+  const supabase = createClient();
+
+  const { data, error } = await (
+    await supabase
+  )
     .from("cookies")
     .select("cookie")
-    .eq("id", 1)
-    .single();
+    .eq("id", 1) // Target row with id = 1
+    .single(); // Ensure only one row is returned
 
   if (error || !data) {
     console.error("Error fetching cookies from Supabase for id=1:", error);
@@ -40,11 +68,15 @@ async function fetchCookiesFromSupabase() {
 }
 
 // Function to save cookies to Supabase (update row with id = 1)
-async function saveCookiesToSupabase(cookies) {
-  const { error } = await supabase
+async function saveCookiesToSupabase(cookies: any) {
+  const supabase = createClient();
+
+  const { error } = await (
+    await supabase
+  )
     .from("cookies")
     .update({ cookie: JSON.stringify(cookies) })
-    .eq("id", 1);
+    .eq("id", 1); // Update the specific row with id = 1
 
   if (error) {
     console.error("Error updating cookies in Supabase for id=1:", error);
@@ -54,7 +86,7 @@ async function saveCookiesToSupabase(cookies) {
 }
 
 // Function to perform a fresh login and update cookies
-async function performLogin(page) {
+async function performLogin(page: any) {
   console.log("Performing fresh login...");
   await page.goto("https://www.instagram.com/accounts/login/", {
     waitUntil: "networkidle2",
@@ -74,7 +106,7 @@ async function performLogin(page) {
   // Extract cookies after login
   const newCookies = await page.cookies();
   const sessionCookie = newCookies.find(
-    (cookie) => cookie.name === "sessionid"
+    (cookie: any) => cookie.name === "sessionid"
   );
   if (sessionCookie) {
     const cookieData = { sessionid: sessionCookie.value };
@@ -87,7 +119,7 @@ async function performLogin(page) {
 }
 
 // Function to check if the session is valid
-async function isSessionValid(page) {
+async function isSessionValid(page: any): Promise<boolean> {
   await page.goto("https://www.instagram.com/", {
     waitUntil: "networkidle2",
     timeout: 60000,
@@ -101,30 +133,24 @@ async function isSessionValid(page) {
 }
 
 // Main scraping function
-async function scrapeInstagramReels(username) {
+async function scrapeInstagramReels(username: string): Promise<ScrapeResult> {
   console.log(`Starting to scrape reels for user: ${username}`);
 
-  const options = {
+  const browser = await puppeteer.launch({
     headless: true,
     args: [
-      '--no-sandbox',
-      '--disable-setuid-sandbox',
-      '--disable-dev-shm-usage',
-      '--disable-gpu',
-      '--disable-accelerated-2d-canvas',
-      '--window-size=1920,1080',
-      '--single-process',
-      '--no-zygote',
-      '--disable-extensions'
-    ]
-  };
-
-  // Add executablePath only in production (Render.com)
-  if (process.env.NODE_ENV === 'production') {
-    options.executablePath = '/usr/bin/google-chrome-stable';
-  }
-
-  const browser = await puppeteer.launch(options);
+      "--no-sandbox",
+      "--disable-setuid-sandbox",
+      "--disable-dev-shm-usage",
+      "--disable-accelerated-2d-canvas",
+      "--window-size=1920,1080",
+      "--user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36",
+      "--disable-blink-features=AutomationControlled",
+      "--disable-web-security",
+      "--disable-features=IsolateOrigins,site-per-process",
+      "--disable-site-isolation-trials",
+    ],
+  });
 
   const page = await browser.newPage();
   await page.setViewport({ width: 1920, height: 1080 });
@@ -167,7 +193,7 @@ async function scrapeInstagramReels(username) {
       timeout: 60000,
     });
 
-    const userInfo = await page.evaluate(() => {
+    const userInfo: UserInfo = await page.evaluate(() => {
       const bioSelectors = [
         'div[class*="x7a106z"] span',
         'div[class*="x1qjc9v5"] span',
@@ -209,17 +235,17 @@ async function scrapeInstagramReels(username) {
       let profileImage = "";
       for (const selector of imageSelectors) {
         const imgElement = document.querySelector(selector);
-        if (imgElement?.src) {
-          profileImage = imgElement.src;
+        if ((imgElement as HTMLImageElement)?.src) {
+          profileImage = (imgElement as HTMLImageElement).src;
           break;
         }
       }
 
-      const stats = {};
+      const stats: { [key: string]: string } = {};
       const statsElements = document.querySelectorAll(
         'ul li span[class*="x1q0g3np"], ul li span'
       );
-      statsElements.forEach((el) => {
+      statsElements.forEach((el: any) => {
         const text = el.textContent.toLowerCase();
         if (text.includes("follower")) stats.followers = text;
         else if (text.includes("following")) stats.following = text;
@@ -227,8 +253,8 @@ async function scrapeInstagramReels(username) {
       });
 
       const links = Array.from(document.querySelectorAll('a[href^="http"]'))
-        .filter((el) => !el.href.includes("instagram.com"))
-        .map((el) => el.href);
+        .filter((el: any) => !el.href.includes("instagram.com"))
+        .map((el: any) => el.href);
 
       return {
         username,
@@ -253,7 +279,7 @@ async function scrapeInstagramReels(username) {
       await delay(2000);
     }
 
-    const reelLinks = await page.evaluate(() => {
+    const reelLinks: string[] = await page.evaluate(() => {
       const selectors = [
         'article a[href*="/reel/"]',
         'a[href*="/reel/"]',
@@ -263,7 +289,7 @@ async function scrapeInstagramReels(username) {
         "div._aagw a",
       ];
 
-      let links = [];
+      let links: string[] = [];
       for (const selector of selectors) {
         const elements = document.querySelectorAll(selector);
         if (elements.length > 0) {
@@ -271,8 +297,10 @@ async function scrapeInstagramReels(username) {
             `Found ${elements.length} elements with selector: ${selector}`
           );
           const tempLinks = Array.from(elements)
-            .map((link) => link.href)
-            .filter((href) => href.includes("/reel/") || href.includes("/p/"));
+            .map((link: any) => link.href)
+            .filter(
+              (href: string) => href.includes("/reel/") || href.includes("/p/")
+            );
           links = [...links, ...tempLinks];
         }
       }
@@ -282,30 +310,30 @@ async function scrapeInstagramReels(username) {
 
     console.log(`Found ${reelLinks.length} reels`);
 
-    const reelsData = [];
+    const reelsData: ReelData[] = [];
     for (const reelUrl of reelLinks) {
       console.log(`Processing reel/post: ${reelUrl}`);
       await page.goto(reelUrl, { waitUntil: "networkidle2", timeout: 30000 });
       await delay(5000);
 
       const reelData = await page.evaluate(() => {
-        let thumbnail = null;
-        let videoUrl = null;
+        let thumbnail: string | null = null;
+        let videoUrl: string | null = null;
         const videoElement = document.querySelector("video");
         if (videoElement) {
-          videoUrl = videoElement.src || null;
-          thumbnail = videoElement.poster || null;
+          videoUrl = (videoElement as HTMLVideoElement).src || null;
+          thumbnail = (videoElement as HTMLVideoElement).poster || null;
         }
 
         if (!thumbnail) {
           const imgElements = document.querySelectorAll("img");
           for (const img of Array.from(imgElements)) {
             if (
-              img.width > 200 &&
-              img.height > 200 &&
-              !img.src.includes("profile")
+              (img as HTMLImageElement).width > 200 &&
+              (img as HTMLImageElement).height > 200 &&
+              !(img as HTMLImageElement).src.includes("profile")
             ) {
-              thumbnail = img.src;
+              thumbnail = (img as HTMLImageElement).src;
               break;
             }
           }
@@ -344,8 +372,8 @@ async function scrapeInstagramReels(username) {
           const elements = document.querySelectorAll(selector);
           for (const el of Array.from(elements)) {
             const text = el.textContent;
-            if (/\d[,\d]*\s*(like|likes)/.test(text)) {
-              likeCount = text.replace(/(like|likes)/g, "").trim();
+            if (/\d[,\d]*\s*(like|likes)/.test(text!)) {
+              likeCount = text!.replace(/(like|likes)/g, "").trim();
               break;
             }
           }
@@ -358,7 +386,7 @@ async function scrapeInstagramReels(username) {
           "div._a9zr",
           "div._a9zs",
         ];
-        let commentsElements = [];
+        let commentsElements: Element[] = [];
         for (const selector of commentSelectors) {
           const elements = document.querySelectorAll(selector);
           if (elements.length > 0) {
@@ -370,7 +398,8 @@ async function scrapeInstagramReels(username) {
         const comments = commentsElements.slice(0, 10).map((comment) => {
           try {
             const username =
-              comment.querySelector("a")?.textContent || "Unknown";
+              (comment.querySelector("a") as HTMLElement)?.textContent ||
+              "Unknown";
             const textElement =
               comment.querySelector("span:not(:has(a))") ||
               comment.querySelector("div._a9zs");
@@ -378,8 +407,11 @@ async function scrapeInstagramReels(username) {
               ? textElement.textContent || "No text"
               : "No text";
             const likes =
-              comment.querySelector('button[type="button"] span')
-                ?.textContent || "0";
+              (
+                comment.querySelector(
+                  'button[type="button"] span'
+                ) as HTMLElement
+              )?.textContent || "0";
             return { username, text, likes };
           } catch (error) {
             return {
@@ -394,7 +426,7 @@ async function scrapeInstagramReels(username) {
         const timeElements = document.querySelectorAll("time");
         if (timeElements.length > 0) {
           postDate =
-            timeElements[0].getAttribute("datetime") ||
+            (timeElements[0] as HTMLElement).getAttribute("datetime") ||
             timeElements[0].textContent ||
             "";
         }
@@ -415,7 +447,7 @@ async function scrapeInstagramReels(username) {
       });
     }
 
-    const fullData = { userInfo, reels: reelsData };
+    const fullData: ScrapeResult = { userInfo, reels: reelsData };
     console.log(`Scraping completed for ${username}`);
     return fullData;
   } catch (error) {
@@ -427,31 +459,24 @@ async function scrapeInstagramReels(username) {
   }
 }
 
-// API Route
-app.post("/api/scrape", async (req, res) => {
+// API Route Handler
+export async function POST(request: Request) {
   try {
-    const { username } = req.body;
+    const { username } = await request.json();
     if (!username) {
-      return res.status(400).json({ error: "Username is required" });
+      return NextResponse.json(
+        { error: "Username is required" },
+        { status: 400 }
+      );
     }
 
     const result = await scrapeInstagramReels(username);
-    return res.status(200).json(result);
+    return NextResponse.json(result, { status: 200 });
   } catch (error) {
     console.error("API Error:", error);
-    return res.status(500).json({ error: "Failed to scrape Instagram reels" });
+    return NextResponse.json(
+      { error: "Failed to scrape Instagram reels" },
+      { status: 500 }
+    );
   }
-});
-
-// Health check endpoint
-app.get("/health", (req, res) => {
-  res.status(200).json({ status: "ok" });
-});
-
-// Start the server
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`Instagram scraper API server running on port ${PORT}`);
-});
-
-module.exports = app; // Export for testing
+}

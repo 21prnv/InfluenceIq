@@ -74,7 +74,7 @@ function DashboardContent() {
       const timeoutId = setTimeout(() => controller.abort(), 300000); // 5 minute timeout
 
       // Step 1: Call the scrape API
-      const scrapeResponse = await fetch("/api/scrape", {
+      const scrapeResponse = await fetch("/api/scrap", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username: usernameToFetch }),
