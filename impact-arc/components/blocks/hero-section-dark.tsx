@@ -3,7 +3,6 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 import { ChevronRight, Search } from "lucide-react";
 import Link from "next/link";
-import { StarBorder } from "../ui/star-border";
 import { Tiles } from "../ui/tiles";
 import { motion } from "framer-motion";
 import { useState } from "react";
@@ -265,20 +264,6 @@ const HeroSection = React.forwardRef<HTMLDivElement, HeroSectionProps>(
                 >
                   ImpactArc
                 </Link>
-                <div className="flex items-center gap-6">
-                  <Link
-                    href="/"
-                    className="text-gray-300 hover:text-white transition-colors"
-                  >
-                    Home
-                  </Link>
-                  <Link
-                    href="/analyzer"
-                    className="text-gray-300 hover:text-white transition-colors"
-                  >
-                    Analyzer
-                  </Link>
-                </div>
               </div>
             </div>
           </nav>

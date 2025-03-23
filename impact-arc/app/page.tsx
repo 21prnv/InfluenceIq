@@ -1,8 +1,8 @@
 import { Features } from "@/components/ui/features"
-import { CallToAction } from "@/components/ui/cta"
 import { HeroSection } from "@/components/blocks/hero-section-dark"
 import { ProfileGalleryDemo } from "@/components/blocks/profile"
 import Filter from "@/components/blocks/filter"
+import { Footer } from "@/components/ui/footer"
 
 export default function Home() {
   return (
@@ -11,8 +11,7 @@ export default function Home() {
       <ProfileGalleryDemo />
       <Filter />
       <Features />
-      <CallToAction />
-
+      <Footer/>
     </main>
   )
 }
