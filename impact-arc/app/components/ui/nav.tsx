@@ -9,7 +9,7 @@ export function Nav() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   return (
-    <nav className="relative bg-purple-900/20  ">
+    <nav className="relative bg-purple-900/20 ">
       <div className="absolute inset-0"></div>
       <div className="max-w-7xl mx-auto px-4">
         <div className="flex items-center justify-between h-16 relative z-10">
@@ -24,13 +24,13 @@ export function Nav() {
             
             <div className="hidden md:flex space-x-8">
               <Link 
-                href="/top-creators"
+                href="#recent"
                 className="text-gray-300 hover:text-white hover:bg-purple-500/10 px-3 py-2 rounded-md transition-colors duration-200 font-medium"
               >
-                Top Creators
+                Recent Posts
               </Link>
               <Link 
-                href="/browse"
+                href="#top-creators"
                 className="text-gray-300 hover:text-white hover:bg-purple-500/10 px-3 py-2 rounded-md transition-colors duration-200 font-medium"
               >
                 Browse Creators

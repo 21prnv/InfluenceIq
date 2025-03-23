@@ -114,7 +114,7 @@ const Filter = () => {
   }, [activeCategory, creators]);
 
   return (
-    <div className="py-6 md:py-12 px-1 md:px-10">
+    <div className="py-6 md:py-12 px-1 md:px-10" id="top-creators">
       <div className="container px-4 md:px-12 lg:px-24 mb-6 md:mb-10">
         <h2 className="text-2xl sm:text-3xl py-2 sm:py-4 font-medium md:text-4xl lg:text-5xl text-white mb-3 sm:mb-6">
           Top Creator Rankings
