@@ -77,7 +77,8 @@ export default function InstagramSearch() {
       const analysisResult = await analyzeInfluencerData(
         apiKey,
         username,
-        dataToAnalyze
+        dataToAnalyze,
+        []
       );
 
       if (analysisResult) {
