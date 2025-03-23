@@ -11,7 +11,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Username is required' }, { status: 400 });
     }
 
-    const response = await fetch(`${BACKEND_URL}/api/scrape-instagram`, {
+    const response = await fetch('https://server-production-a40c.up.railway.app/api/scrape-instagram', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
