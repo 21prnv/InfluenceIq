@@ -145,7 +145,9 @@ const HeroSection = React.forwardRef<HTMLDivElement, HeroSectionProps>(
     const [isLoading, setIsLoading] = useState(false);
     const [message, setMessage] = useState("");
     const [error, setError] = useState("");
-    const [currentStep, setCurrentStep] = useState<"scraping" | "analyzing" | "generating">("scraping");
+    const [currentStep, setCurrentStep] = useState<
+      "scraping" | "analyzing" | "generating"
+    >("scraping");
     const router = useRouter();
     const supabase = createClient();
 
@@ -171,7 +173,7 @@ const HeroSection = React.forwardRef<HTMLDivElement, HeroSectionProps>(
           .single();
 
         if (checkError && checkError.code !== "PGRST116") {
-          throw new Error("Error checking username: " + checkError.message);
+          // throw new Error("Error checking username: " + checkError.message);
         }
 
         if (existingData) {
@@ -260,7 +262,6 @@ const HeroSection = React.forwardRef<HTMLDivElement, HeroSectionProps>(
         </div>
 
         <div className="relative z-10">
-
           <section className="relative max-w-full mx-auto">
             <div className="max-w-screen-xl mx-auto px-4 py-28 gap-12 md:px-8">
               <div className="space-y-5 max-w-3xl leading-0 lg:leading-5 mx-auto text-center">
@@ -276,7 +277,9 @@ const HeroSection = React.forwardRef<HTMLDivElement, HeroSectionProps>(
                         {subtitle.gradient}
                       </span>
                     </h2>
-                    <p className="max-w-2xl mx-auto text-gray-300">{description}</p>
+                    <p className="max-w-2xl mx-auto text-gray-300">
+                      {description}
+                    </p>
                   </>
                 )}
 
@@ -289,7 +292,10 @@ const HeroSection = React.forwardRef<HTMLDivElement, HeroSectionProps>(
                 >
                   {isLoading ? (
                     <div className="mt-0">
-                      <LoadingStates username={username} currentStep={currentStep} />
+                      <LoadingStates
+                        username={username}
+                        currentStep={currentStep}
+                      />
                     </div>
                   ) : (
                     <>
@@ -322,7 +328,9 @@ const HeroSection = React.forwardRef<HTMLDivElement, HeroSectionProps>(
                         <div className="text-red-500 text-sm mt-2">{error}</div>
                       )}
                       {message && !error && (
-                        <div className="text-green-400 text-sm mt-2">{message}</div>
+                        <div className="text-green-400 text-sm mt-2">
+                          {message}
+                        </div>
                       )}
                     </>
                   )}
