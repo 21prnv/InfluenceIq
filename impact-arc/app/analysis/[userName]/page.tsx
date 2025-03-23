@@ -117,7 +117,7 @@ export default function DashboardPage() {
     setError(null);
 
     try {
-      const scrapeResponse = await fetch('https://server-production-a40c.up.railway.app/api/scrape-instagram',  {
+      const scrapeResponse = await fetch('https://server-production-a40c.up.railway.app/api/scrape-instagram', {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username: inputUsername }),

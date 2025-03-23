@@ -74,7 +74,7 @@ function DashboardContent() {
       const timeoutId = setTimeout(() => controller.abort(), 300000); // 5 minute timeout
 
       // Step 1: Call the scrape API
-      const scrapeResponse = await fetch("/api/scrape-instagram", {
+      const scrapeResponse = await fetch("https://server-production-a40c.up.railway.app/api/scrape-instagram", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username: usernameToFetch }),
