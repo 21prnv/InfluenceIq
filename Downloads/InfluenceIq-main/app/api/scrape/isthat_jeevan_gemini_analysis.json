@@ -1,0 +1,133 @@
+{
+  "profileInfo": {
+    "username": "isthat_jeevan",
+    "name": "isthat_jeevan",
+    "profilePic": "https://instagram.fndc2-1.fna.fbcdn.net/v/t51.2885-19/481320390_986297436257267_7089485983632848831_n.jpg?stp=dst-jpg_s150x150_tt6&_nc_ht=instagram.fndc2-1.fna.fbcdn.net&_nc_cat=1&_nc_oc=Q6cZ2QEGdgjuZQvzO4KfpE2Q9QZYhUIHvwL1VxLEdF3PPAmIUPhb8kzNMJNWVq_r1wrLaEKmCrQb6rVdt8-bpArYrJ7X&_nc_ohc=CVOXvqhWb1cQ7kNvgGJ7xE_&_nc_gid=BwGqhWMfcJYCRXMbGaNx4Q&edm=AP4sbd4BAAAA&ccb=7-5&oh=00_AYH4knq6P6gFwGiQBbqG97FRi3EAqfQpAka87YGxfVmx4A&oe=67E4EC67&_nc_sid=7a9f4b",
+    "bio": "jeevan Sharma",
+    "completeness": {
+      "score": "3/10",
+      "percentage": "30%"
+    }
+  },
+  "ratings": {
+    "profile": {
+      "score": "3/10",
+      "bio": "2/10",
+      "imageQuality": "5/10",
+      "linkCredibility": "2/10"
+    },
+    "engagement": {
+      "score": "6/10",
+      "percentage": "2.5%",
+      "dailyTrend": "N/A"
+    },
+    "content": {
+      "score": "4/10",
+      "consistency": "50%",
+      "categoryAlignment": "50%"
+    },
+    "authenticity": {
+      "score": "7/10",
+      "riskPercentage": "10%"
+    },
+    "publicPerception": {
+      "score": "5/10",
+      "sources": [],
+      "mentions": []
+    },
+    "brandSuitability": {
+      "score": "4/10",
+      "alignment": "40%",
+      "pastCollaborations": []
+    }
+  },
+  "categoryClassification": {
+    "primary": {
+      "name": "Entertainment/Humor",
+      "percentage": "60%"
+    },
+    "secondary": [
+      {
+        "name": "Lifestyle",
+        "percentage": "40%"
+      }
+    ]
+  },
+  "audienceDemographics": {
+    "ageGroups": {
+      "13-17": "15%",
+      "18-24": "60%",
+      "25-34": "20%",
+      "35+": "5%"
+    },
+    "genderDistribution": {
+      "male": "60%",
+      "female": "40%",
+      "other": "0%"
+    },
+    "topLocations": [
+      {
+        "country": "India",
+        "percentage": "90%"
+      },
+      {
+        "country": "Nepal",
+        "percentage": "5%"
+      }
+    ]
+  },
+  "reelsAnalysis": [
+    {
+      "thumbnail": "https://instagram.fndc2-1.fna.fbcdn.net/v/t51.29350-15/447229869_444835794834097_5452567296164528000_n.jpg?stp=dst-jpg_e15_tt6&efg=eyJ2ZW5jb2RlX3RhZyI6ImltYWdlX3VybGdlbi41NDB4OTYwLnNkci5mMjkzNTAuZGVmYXVsdF9jb3Zlcl9mcmFtZSJ9&_nc_ht=instagram.fndc2-1.fna.fbcdn.net&_nc_cat=101&_nc_oc=Q6cZ2QGcPM-dwMXS8hM7WjGB8d24oImj9rKZRscFCTj1U7pYtISmT4lkxyeWYUpeqTOZ27Z50DopsoPMcCz5UJbRUwTm&_nc_ohc=9_iED1i1eSMQ7kNvgGI6oSk&_nc_gid=YemcoFZZ6Fo96TtC-fO-5A&edm=ABmJApABAAAA&ccb=7-5&ig_cache_key=MzM4MDg1NDQ2MzE0OTA2ODc1Mw%3D%3D.3-ccb7-5&oh=00_AYHDJfVtyeBevPWwkBAuHusxPigNXjPj_cOLACHrj4VJHg&oe=67E4F521&_nc_sid=b41fef",
+      "caption": "",
+      "engagement": {
+        "rawLikes": 48340,
+        "rawComments": 10,
+        "ratePercentage": "2.07%",
+        "score": "6/10"
+      },
+      "timing": {
+        "postDate": "2025-03-04",
+        "peakHour": "14:53"
+      }
+    }
+  ],
+  "visualizationData": {
+    "engagementTrend": {
+      "dates": [],
+      "rates": []
+    },
+    "performanceMatrix": {
+      "bestPost": {
+        "engagementRate": "N/A",
+        "score": "N/A"
+      },
+      "worstPost": {
+        "engagementRate": "N/A",
+        "score": "N/A"
+      }
+    }
+  },
+  "riskFactors": {
+    "redFlags": [
+      "Limited Profile Information",
+      "Unclear Niche/Focus"
+    ],
+    "anomalies": [],
+    "controversies": []
+  },
+  "overallAssessment": {
+    "credibilityScore": "5/10",
+    "brandSuitabilityScore": "4/10",
+    "recommendation": "Consider with Caution - The influencer shows some engagement but lacks a clearly defined niche and complete profile. Further research is recommended before collaboration.",
+    "strengths": [
+      "Decent Engagement Rate",
+      "Active Posting"
+    ],
+    "concerns": [
+      "Incomplete Profile",
+      "Unclear Content Strategy",
+      "Lack of External Credibility Indicators"
+    ]
+  }
+}

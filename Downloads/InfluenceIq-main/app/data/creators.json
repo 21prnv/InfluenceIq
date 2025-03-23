@@ -1,0 +1,110 @@
+[
+  {
+    "id": "carryminati",
+    "name": "CarryMinati",
+    "title": "CarryMinati: The King of Indian Roasting",
+    "description": "Explore how CarryMinati revolutionized content creation with his unique roasting and gaming videos, making him one of India's most popular YouTubers.",
+    "category": "Gaming",
+    "href": "https://www.youtube.com/c/CarryMinati",
+    "image": "https://i.pinimg.com/474x/0f/9c/fe/0f9cfeada1c8b4196a52a45c8e48f8cf.jpg"
+  },
+  {
+    "id": "bhuvan_bam",
+    "name": "Bhuvan Bam",
+    "title": "Bhuvan Bam: The Multi-Talented Creator",
+    "description": "Discover how Bhuvan Bam built his BB Ki Vines empire through character-based comedy and expanded into music, acting, and entrepreneurship.",
+    "category": "Education and Tutorials",
+    "href": "https://www.youtube.com/c/BBKiVines",
+    "image": "https://i.pinimg.com/474x/4f/d0/e4/4fd0e4ce73931bc1b176170bd12b218b.jpg"
+  },
+  {
+    "id": "ranveer_allahbadia",
+    "name": "Ranveer Allahbadia",
+    "title": "Ranveer Allahbadia: Transforming Indian Content",
+    "description": "Learn how Ranveer Allahbadia (BeerBiceps) evolved from fitness content to building a podcast empire with The Ranveer Show, interviewing celebrities and thought leaders.",
+    "category": "Fitness",
+    "href": "https://www.youtube.com/c/BeerBiceps",
+    "image": "https://i.pinimg.com/474x/59/c2/57/59c2573be5a6a2742a37722b22e173e6.jpg"
+  },
+  {
+    "id": "kabita_singh",
+    "name": "Kabita Singh",
+    "title": "Kabita Singh: The Kitchen Queen",
+    "description": "Follow Kabita's Kitchen journey as she simplifies Indian and international recipes, becoming one of India's most trusted culinary content creators.",
+    "category": "Food and Cooking",
+    "href": "https://www.youtube.com/c/KabitasKitchen",
+    "image": "https://i.pinimg.com/474x/75/32/0f/75320f56338f6540c3b027714100f081.jpg"
+  },
+  {
+    "id": "komal_pandey",
+    "name": "Komal Pandey",
+    "title": "Komal Pandey: Fashion Redefined",
+    "description": "See how Komal Pandey revolutionized Indian fashion content with her unique styling videos and relatable approach to luxury and street fashion.",
+    "category": "Beauty and Fashion",
+    "href": "https://www.instagram.com/komalpandeyofficial",
+    "image": "https://i.pinimg.com/474x/f8/61/5d/f8615d9ae9ddd1e469be8900a6fcefa8.jpg"
+  },
+  {
+    "id": "technical_guruji",
+    "name": "Technical Guruji",
+    "title": "Technical Guruji: India's Tech Guru",
+    "description": "Explore how Gaurav Chaudhary became India's biggest tech influencer by simplifying technology news and reviews in Hindi, reaching millions daily.",
+    "category": "Technology and Gadgets",
+    "href": "https://www.youtube.com/c/TechnicalGuruji",
+    "image": "https://i.pinimg.com/474x/74/ae/7a/74ae7a50487700e1243548afd0df40d2.jpg"
+  },
+  {
+    "id": "nisha_madhulika",
+    "name": "Nisha Madhulika",
+    "title": "Nisha Madhulika: The Vegetarian Food Expert",
+    "description": "Discover how Nisha Madhulika started her culinary journey at 55 and became one of India's most beloved vegetarian recipe creators.",
+    "category": "Food and Cooking",
+    "href": "https://www.youtube.com/c/NishaMadhulika",
+    "image": "https://i.pinimg.com/474x/b6/20/63/b62063a22d2b06be1cf1d214987fa0f5.jpg"
+  },
+  {
+    "id": "amit_bhadana",
+    "name": "Amit Bhadana",
+    "title": "Amit Bhadana: Voice of Rural India",
+    "description": "Learn how Amit Bhadana's relatable comedy and authentic portrayal of rural Indian life made him one of the country's most subscribed independent creators.",
+    "category": "Travel and Lifestyle",
+    "href": "https://www.youtube.com/c/AmitBhadana",
+    "image": "https://i.pinimg.com/474x/0f/9c/fe/0f9cfeada1c8b4196a52a45c8e48f8cf.jpg"
+  },
+  {
+    "id": "fit_tuber",
+    "name": "Fit Tuber",
+    "title": "Fit Tuber: Holistic Health Advocate",
+    "description": "Explore how Vivek Mittal combines modern science with traditional Indian wellness practices to create accessible health and fitness content.",
+    "category": "Health Care",
+    "href": "https://www.youtube.com/c/FitTuber",
+    "image": "https://i.pinimg.com/474x/4f/d0/e4/4fd0e4ce73931bc1b176170bd12b218b.jpg"
+  },
+  {
+    "id": "mostlysane",
+    "name": "Mostly Sane",
+    "title": "Prajakta Koli: The Relatable Creator",
+    "description": "Discover how Prajakta Koli (MostlySane) evolved from comedy sketches to becoming an actress, global ambassador, and voice for social causes.",
+    "category": "Education and Tutorials",
+    "href": "https://www.youtube.com/c/MostlySane",
+    "image": "https://i.pinimg.com/474x/59/c2/57/59c2573be5a6a2742a37722b22e173e6.jpg"
+  },
+  {
+    "id": "flying_beast",
+    "name": "Flying Beast",
+    "title": "Gaurav Taneja: The Multi-Faceted Creator",
+    "description": "Follow Gaurav Taneja's journey from pilot to fitness expert to vlogger, documenting his family life and adventures with authenticity.",
+    "category": "Travel and Lifestyle",
+    "href": "https://www.youtube.com/c/FlyingBeast320",
+    "image": "https://i.pinimg.com/474x/75/32/0f/75320f56338f6540c3b027714100f081.jpg"
+  },
+  {
+    "id": "mrunal_panchal",
+    "name": "Mrunal Panchal",
+    "title": "Mrunal Panchal: Beauty Influencer Extraordinaire",
+    "description": "Explore how Mrunal Panchal built a massive following through her beauty, fashion, and lifestyle content, making her one of India's top influencers.",
+    "category": "Beauty and Fashion",
+    "href": "https://www.instagram.com/mrunu",
+    "image": "https://i.pinimg.com/474x/f8/61/5d/f8615d9ae9ddd1e469be8900a6fcefa8.jpg"
+  }
+] 
