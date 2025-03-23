@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { DonutChart, AreaChart } from "./component/charts";
+import { DonutChart, AreaChart } from "../component/charts";
 import {
   ProfileOverview,
   EngagementMetrics,
@@ -13,63 +13,83 @@ import {
   ContentAnalysis,
   ReelsPerformance,
   RiskAssessment,
-} from "./component/dashboard-sections";
-import { DashboardHeader } from "./component/dashboard-header";
-import { DashboardShell } from "./component/dashboard-shell";
-import { useRouter, useSearchParams } from "next/navigation";
+} from "../component/dashboard-sections";
+import { DashboardHeader } from "../component/dashboard-header";
+import { DashboardShell } from "../component/dashboard-shell";
+import { useRouter, useParams } from "next/navigation"; // Changed to useParams for dynamic route
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Loader2 } from "lucide-react";
+import { createClient } from "@/utils/supbase/client";
+
+// Initialize Supabase client
 
 export default function DashboardPage() {
-  const [username, setUsername] = useState<string>("");
-  const [inputUsername, setInputUsername] = useState<string>("");
+  const [username, setUsername] = useState<string>(""); // From route
+  const [inputUsername, setInputUsername] = useState<string>(""); // From text field
   const [analysisData, setAnalysisData] = useState<any>(null);
+  const [scrapedData, setScrapedData] = useState<any>(null); // Store scraped data
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
-  const searchParams = useSearchParams();
-
+  const params = useParams(); // Get dynamic route params
+  const supabase = createClient();
+  // Extract username from route on mount
   useEffect(() => {
-    const usernameParam = searchParams.get("username");
-    if (usernameParam) {
-      setUsername(usernameParam);
-      fetchAnalysisData(usernameParam);
-    } else {
-      const storedAnalysis = sessionStorage.getItem("profileAnalysis");
-      if (storedAnalysis) {
-        try {
-          const parsedAnalysis = JSON.parse(storedAnalysis);
-          setAnalysisData(parsedAnalysis);
-          if (
-            parsedAnalysis.profileInfo &&
-            parsedAnalysis.profileInfo.username
-          ) {
-            setUsername(parsedAnalysis.profileInfo.username);
-          }
-        } catch (error) {
-          console.error("Error parsing analysis data:", error);
-        }
-      }
+    const usernameFromRoute = params.userName as string;
+    if (usernameFromRoute) {
+      setUsername(decodeURIComponent(usernameFromRoute));
+      checkAndFetchData(decodeURIComponent(usernameFromRoute));
     }
-  }, [searchParams]);
+  }, [params.username]);
 
-  const fetchAnalysisData = async (usernameToFetch: string) => {
-    if (!usernameToFetch.trim()) return;
+  // Check Supabase for existing data and fetch or prompt accordingly
+  const checkAndFetchData = async (usernameToCheck: string) => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      // Check if username exists in user_data
+      const { data: existingData, error: fetchError } = await supabase
+        .from("user_data")
+        .select("insta_username, scrapped_data, reponse")
+        .eq("insta_username", usernameToCheck)
+        .single();
+
+      if (fetchError && fetchError.code !== "PGRST116") {
+        throw new Error("Error checking database: " + fetchError.message);
+      }
+
+      if (existingData) {
+        // Data exists, set it and display dashboard
+        setScrapedData(existingData.scrapped_data);
+        setAnalysisData(existingData.reponse);
+        setLoading(false);
+      } else {
+        // Data doesn’t exist, wait for user input to scrape and analyze
+        setLoading(false);
+      }
+    } catch (err: any) {
+      console.error("Error checking data:", err);
+      setError(`Error: ${err.message || "Unknown error checking data"}`);
+      setLoading(false);
+    }
+  };
+
+  // Handle scraping and analyzing when user submits a new username
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!inputUsername.trim()) return;
 
     setLoading(true);
     setError(null);
 
     try {
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 300000); // 5 minute timeout
-
-      // Step 1: Call the scrape API
+      // Step 1: Scrape the data
       const scrapeResponse = await fetch("/api/scrap", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username: usernameToFetch }),
-        signal: controller.signal,
+        body: JSON.stringify({ username: inputUsername }),
       });
 
       if (!scrapeResponse.ok) {
@@ -81,17 +101,14 @@ export default function DashboardPage() {
       }
 
       const scrapeData = await scrapeResponse.json();
-      console.log("Scraped data:", scrapeData);
+      setScrapedData(scrapeData);
 
-      // Step 2: Call the analyze API with scraped data
+      // Step 2: Analyze the scraped data
       const analyzeResponse = await fetch("/api/analyze", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(scrapeData),
-        signal: controller.signal,
+        body: JSON.stringify({ data: scrapeData }),
       });
-
-      clearTimeout(timeoutId);
 
       if (!analyzeResponse.ok) {
         throw new Error(
@@ -102,45 +119,31 @@ export default function DashboardPage() {
       }
 
       const analysisResult = await analyzeResponse.json();
-      console.log("Analysis result:", analysisResult);
-
       setAnalysisData(analysisResult);
-      sessionStorage.setItem("profileAnalysis", JSON.stringify(analysisResult));
-    } catch (err: any) {
-      console.error("Error fetching analysis:", err);
 
-      if (err.name === "AbortError") {
-        setError(
-          "Request timed out. Analysis is taking too long, please try again."
-        );
-      } else if (
-        err.message.includes("fetch") ||
-        err.message.includes("network")
-      ) {
-        setError(
-          "Network error: Could not connect to the server. Please check your internet connection and try again."
-        );
-      } else {
-        setError(
-          `Error: ${
-            err.message || "Unknown error occurred while fetching analysis data"
-          }`
-        );
+      // Step 3: Insert into Supabase
+      const { error: insertError } = await supabase.from("user_data").insert({
+        insta_username: inputUsername,
+        scrapped_data: scrapeData,
+        reponse: analysisResult,
+      });
+
+      if (insertError) {
+        throw new Error("Failed to save data: " + insertError.message);
       }
+
+      // Update URL and state
+      router.push(`/analysis/${encodeURIComponent(inputUsername)}`);
+      setUsername(inputUsername);
+    } catch (err: any) {
+      console.error("Error processing data:", err);
+      setError(`Error: ${err.message || "Unknown error occurred"}`);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!inputUsername.trim()) return;
-
-    router.push(`/analysis?username=${encodeURIComponent(inputUsername)}`);
-    setUsername(inputUsername);
-    fetchAnalysisData(inputUsername);
-  };
-
+  // Loading state
   if (loading) {
     return (
       <DashboardShell>
@@ -155,12 +158,13 @@ export default function DashboardPage() {
     );
   }
 
-  if (!analysisData) {
+  // If no data exists and no analysis yet, show input form
+  if (!analysisData && !scrapedData) {
     return (
       <DashboardShell>
         <DashboardHeader
           heading="Influencer Analytics"
-          text="Enter an Instagram username to see comprehensive analysis and insights"
+          text={`No data found for @${username}. Enter an Instagram username to analyze.`}
         />
         <Card>
           <CardHeader>
@@ -176,7 +180,10 @@ export default function DashboardPage() {
                   onChange={(e) => setInputUsername(e.target.value)}
                 />
               </div>
-              <Button type="submit" disabled={!inputUsername.trim()}>
+              <Button type="submit" disabled={!inputUsername.trim() || loading}>
+                {loading ? (
+                  <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                ) : null}
                 Analyze <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </form>
@@ -191,21 +198,19 @@ export default function DashboardPage() {
     );
   }
 
+  // Dashboard with analyzed data
   return (
     <DashboardShell>
       <DashboardHeader
         heading="Influencer Analytics"
-        text={`Comprehensive analysis and insights for @${
-          username ||
-          (analysisData.profileInfo ? analysisData.profileInfo.username : "")
-        }`}
+        text={`Comprehensive analysis and insights for @${username}`}
       />
       <div className="mb-6">
         <form onSubmit={handleSubmit} className="flex gap-2">
           <div className="flex-1">
             <Input
               type="text"
-              placeholder="Enter Instagram username"
+              placeholder="Enter another Instagram username"
               value={inputUsername}
               onChange={(e) => setInputUsername(e.target.value)}
             />

@@ -1,33 +1,14 @@
-"use client"
-import * as React from "react"
-import { cn } from "@/lib/utils"
-import { ChevronRight, Search } from "lucide-react"
-import Link from "next/link"
-import { StarBorder } from "../ui/star-border"
-import { Tiles } from "../ui/tiles"
-import { motion } from "framer-motion"
-import { useState } from "react"
-import { useRouter } from "next/navigation"
-
-interface HeroSectionProps extends React.HTMLAttributes<HTMLDivElement> {
-  title?: string
-  subtitle?: {
-    regular: string
-    gradient: string
-  }
-  description?: string
-  ctaText?: string
-  ctaHref?: string
-  bottomImage?: {
-    dark: string
-  }
-  gridOptions?: {
-    angle?: number
-    cellSize?: number
-    opacity?: number
-    darkLineColor?: string
-  }
-}
+"use client";
+import * as React from "react";
+import { cn } from "@/lib/utils";
+import { ChevronRight, Search } from "lucide-react";
+import Link from "next/link";
+import { StarBorder } from "../ui/star-border";
+import { Tiles } from "../ui/tiles";
+import { motion } from "framer-motion";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { createClient } from "@/utils/supbase/client";
 
 const RetroGrid = ({
   angle = 65,
@@ -40,13 +21,13 @@ const RetroGrid = ({
     "--cell-size": `${cellSize}px`,
     "--opacity": opacity,
     "--dark-line": darkLineColor,
-  } as React.CSSProperties
+  } as React.CSSProperties;
 
   return (
     <div
       className={cn(
         "pointer-events-none absolute size-full overflow-hidden [perspective:200px]",
-        `opacity-[var(--opacity)]`,
+        `opacity-[var(--opacity)]`
       )}
       style={gridStyles}
     >
@@ -55,22 +36,31 @@ const RetroGrid = ({
       </div>
       <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent to-90%" />
     </div>
-  )
-}
+  );
+};
 
-// Add random animated tiles that hover over the background
-const AnimatedTile = ({ delay = 0, size = 10, x, y }: { delay: number, size: number, x: number, y: number }) => {
+const AnimatedTile = ({
+  delay = 0,
+  size = 10,
+  x,
+  y,
+}: {
+  delay: number;
+  size: number;
+  x: number;
+  y: number;
+}) => {
   return (
     <motion.div
       className="absolute z-[2] bg-purple-500/5 border border-purple-500/10 rounded-sm"
-      style={{ 
-        width: size, 
+      style={{
+        width: size,
         height: size,
         left: `${x}%`,
         top: `${y}%`,
       }}
       initial={{ opacity: 0, scale: 0 }}
-      animate={{ 
+      animate={{
         opacity: [0, 0.7, 0],
         scale: [0, 1, 0.8],
         y: [0, -20, -40],
@@ -81,36 +71,54 @@ const AnimatedTile = ({ delay = 0, size = 10, x, y }: { delay: number, size: num
         delay: delay,
         repeat: Infinity,
         repeatType: "loop",
-        ease: "easeInOut"
+        ease: "easeInOut",
       }}
     />
-  )
-}
+  );
+};
 
-// Create 10 random tiles
 const RandomTiles = () => {
-  // Create an array of random positions
   const tiles = Array.from({ length: 15 }, (_, i) => ({
     id: i,
     delay: Math.random() * 10,
     size: Math.floor(Math.random() * 30) + 5,
     x: Math.random() * 100,
     y: Math.random() * 100,
-  }))
+  }));
 
   return (
     <div className="absolute inset-0 z-[2] overflow-hidden pointer-events-none">
       {tiles.map((tile) => (
-        <AnimatedTile 
-          key={tile.id} 
-          delay={tile.delay} 
-          size={tile.size} 
-          x={tile.x} 
-          y={tile.y} 
+        <AnimatedTile
+          key={tile.id}
+          delay={tile.delay}
+          size={tile.size}
+          x={tile.x}
+          y={tile.y}
         />
       ))}
     </div>
-  )
+  );
+};
+
+interface HeroSectionProps extends React.HTMLAttributes<HTMLDivElement> {
+  title?: string;
+  subtitle?: {
+    regular: string;
+    gradient: string;
+  };
+  description?: string;
+  ctaText?: string;
+  ctaHref?: string;
+  bottomImage?: {
+    dark: string;
+  };
+  gridOptions?: {
+    angle?: number;
+    cellSize?: number;
+    opacity?: number;
+    darkLineColor?: string;
+  };
 }
 
 const HeroSection = React.forwardRef<HTMLDivElement, HeroSectionProps>(
@@ -131,17 +139,17 @@ const HeroSection = React.forwardRef<HTMLDivElement, HeroSectionProps>(
       gridOptions,
       ...props
     },
-    ref,
+    ref
   ) => {
     const [username, setUsername] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const [message, setMessage] = useState("");
     const [error, setError] = useState("");
     const router = useRouter();
-
+    const supabase = createClient();
     const handleSubmit = async (e: React.FormEvent) => {
       e.preventDefault();
-      
+
       if (!username.trim()) {
         setError("Please enter an Instagram username");
         return;
@@ -150,97 +158,122 @@ const HeroSection = React.forwardRef<HTMLDivElement, HeroSectionProps>(
       setIsLoading(true);
       setError("");
       setMessage("Analyzing profile... This may take up to 2 minutes.");
-      
+
       try {
-        // Add timeout to the fetch operation
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 300000); // 5 minute timeout
-        
-        const response = await fetch(`/api/scrape?username=${username}`, {
-          method: 'POST',
+        // Step 1: Check if username already exists in Supabase
+        const { data: existingData, error: checkError } = await supabase
+          .from("user_data")
+          .select("insta_username")
+          .eq("insta_username", username)
+          .single();
+
+        if (checkError && checkError.code !== "PGRST116") {
+          throw new Error("Error checking username: " + checkError.message);
+        }
+
+        if (existingData) {
+          setMessage(`Profile for ${username} already exists. Redirecting...`);
+          setTimeout(() => router.push(`/analysis/${username}`), 1000);
+          return;
+        }
+
+        // Step 2: Call the Instagram scraping API
+        const scrapeResponse = await fetch("/api/scrap", {
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
-          signal: controller.signal
+          body: JSON.stringify({ username }),
         });
-        
-        clearTimeout(timeoutId);
-        
-        if (!response.ok) {
-          // Handle HTTP error responses
-          const errorText = await response.text();
-          throw new Error(`Server responded with status: ${response.status}. Details: ${errorText}`);
+
+        if (!scrapeResponse.ok) {
+          const errorText = await scrapeResponse.text();
+          throw new Error(
+            `Scraping failed: ${scrapeResponse.status} - ${errorText}`
+          );
         }
-        
-        const data = await response.json();
-        
-        if (data.success) {
-          // We're only interested in the Gemini analysis, not the scraped data
-          // Store the analysis in localStorage or sessionStorage for use on the results page
-          if (data.analysis) {
-            sessionStorage.setItem('profileAnalysis', JSON.stringify(data.analysis));
-            // Redirect to results page using the App Router navigation
-            router.push('/analysis');
-          } else {
-            setError("Analysis completed but no results were returned");
-          }
-        } else {
-          setError(data.message || "Failed to analyze profile");
+
+        const scrapedData = await scrapeResponse.json();
+        console.log("Scraped Data:", scrapedData);
+
+        // Step 3: Call the existing /api/analyze endpoint for Gemini response
+        const analyzeResponse = await fetch("/api/analyze", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ data: scrapedData }),
+        });
+
+        if (!analyzeResponse.ok) {
+          const errorText = await analyzeResponse.text();
+          throw new Error(
+            `Analysis failed: ${analyzeResponse.status} - ${errorText}`
+          );
         }
+
+        const geminiResponse = await analyzeResponse.json();
+
+        // Step 4: Insert data into Supabase
+        const { error: insertError } = await supabase.from("user_data").insert({
+          insta_username: username,
+          scraped_data: scrapedData,
+          response: geminiResponse,
+        });
+
+        if (insertError) {
+          throw new Error(
+            "Failed to save data to Supabase: " + insertError.message
+          );
+        }
+
+        setMessage("Analysis complete! Redirecting...");
+        setTimeout(() => router.push(`/analysis/${username}`), 1000);
       } catch (err: any) {
-        console.error("Error analyzing profile:", err);
-        
-        // Provide more specific error messages
-        if (err.name === 'AbortError') {
-          setError("Request timed out. The analysis is taking too long, please try again.");
-        } else if (err.message.includes('fetch')) {
-          setError("Network error: Could not connect to the server. Please check your internet connection and try again.");
-        } else {
-          setError(`An error occurred: ${err.message || "Unknown error"}`);
-        }
+        console.error("Error in analysis process:", err);
+        setError(`An error occurred: ${err.message || "Unknown error"}`);
       } finally {
         setIsLoading(false);
       }
     };
 
     return (
-      <div className={cn("relative overflow-hidden min-h-screen", className)} ref={ref} {...props}>
-        {/* Background gradient */}
+      <div
+        className={cn("relative overflow-hidden min-h-screen", className)}
+        ref={ref}
+        {...props}
+      >
         <div className="absolute top-0 z-[1] h-screen w-screen bg-purple-900/20 bg-[radial-gradient(ellipse_20%_80%_at_50%_-20%,rgba(120,119,198,0.3),rgba(255,255,255,0))]" />
-        
-        {/* Tiles component as background */}
+
         <div className="absolute inset-0 z-0">
           <Tiles
-            rows={30} 
+            rows={30}
             cols={30}
             tileSize="md"
             tileClassName="hover:bg-purple-500/20 transition-colors duration-500"
           />
-          {/* Gradient overlay for better contrast with content */}
           <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/40 to-black/70 z-[1]" />
         </div>
-        
-        {/* Content with higher z-index to appear above the tiles */}
+
         <div className="relative z-10">
           <nav className="relative bg-transparent border-b border-gray-800/30">
             <div className="max-w-7xl mx-auto px-4">
               <div className="flex items-center justify-between h-16">
-                <Link 
-                  href="/" 
+                <Link
+                  href="/"
                   className="bg-clip-text bg-gradient-to-br from-white via-30% via-white to-white/30 font-bold text-2xl text-center leading-[1.2] md:leading-[1.3] text-transparent"
                 >
                   ImpactArc
                 </Link>
-                
                 <div className="flex items-center gap-6">
-                  <Link 
-                    href="/" 
+                  <Link
+                    href="/"
                     className="text-gray-300 hover:text-white transition-colors"
                   >
                     Home
                   </Link>
-                  <Link 
-                    href="/analyzer" 
+                  <Link
+                    href="/analyzer"
                     className="text-gray-300 hover:text-white transition-colors"
                   >
                     Analyzer
@@ -249,7 +282,7 @@ const HeroSection = React.forwardRef<HTMLDivElement, HeroSectionProps>(
               </div>
             </div>
           </nav>
-          
+
           <section className="relative max-w-full mx-auto">
             <div className="max-w-screen-xl mx-auto px-4 py-28 gap-12 md:px-8">
               <div className="space-y-5 max-w-3xl leading-0 lg:leading-5 mx-auto text-center">
@@ -263,12 +296,12 @@ const HeroSection = React.forwardRef<HTMLDivElement, HeroSectionProps>(
                     {subtitle.gradient}
                   </span>
                 </h2>
-                <p className="max-w-2xl mx-auto text-gray-300">
-                  {description}
-                </p>
-                
-                {/* Instagram Username Input Form */}
-                <form onSubmit={handleSubmit} className="mt-8 space-y-4 max-w-md mx-auto">
+                <p className="max-w-2xl mx-auto text-gray-300">{description}</p>
+
+                <form
+                  onSubmit={handleSubmit}
+                  className="mt-8 space-y-4 max-w-md mx-auto"
+                >
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                       <Search className="h-5 w-5 text-gray-400" />
@@ -282,7 +315,7 @@ const HeroSection = React.forwardRef<HTMLDivElement, HeroSectionProps>(
                       disabled={isLoading}
                     />
                   </div>
-                  
+
                   <button
                     type="submit"
                     disabled={isLoading}
@@ -290,25 +323,42 @@ const HeroSection = React.forwardRef<HTMLDivElement, HeroSectionProps>(
                   >
                     {isLoading ? (
                       <>
-                        <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        <svg
+                          className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                        >
+                          <circle
+                            className="opacity-25"
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="currentColor"
+                            strokeWidth="4"
+                          ></circle>
+                          <path
+                            className="opacity-75"
+                            fill="currentColor"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                          ></path>
                         </svg>
                         Analyzing...
                       </>
-                    ) : ctaText}
+                    ) : (
+                      ctaText
+                    )}
                   </button>
-                  
+
                   {error && (
                     <div className="text-red-500 text-sm mt-2">{error}</div>
                   )}
-                  
                   {message && !error && (
                     <div className="text-green-400 text-sm mt-2">{message}</div>
                   )}
                 </form>
               </div>
-              
+
               {bottomImage && !isLoading && (
                 <div className="mt-32 mx-10 relative">
                   <img
@@ -322,9 +372,9 @@ const HeroSection = React.forwardRef<HTMLDivElement, HeroSectionProps>(
           </section>
         </div>
       </div>
-    )
-  },
-)
-HeroSection.displayName = "HeroSection"
+    );
+  }
+);
+HeroSection.displayName = "HeroSection";
 
-export { HeroSection }
+export { HeroSection };
