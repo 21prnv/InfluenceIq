@@ -14,6 +14,10 @@ interface ProfileOverviewProps {
 }
 
 export function ProfileOverview({ data }: ProfileOverviewProps) {
+  // State for tracking image loading status
+  const [imageLoaded, setImageLoaded] = useState(false);
+  const [imageError, setImageError] = useState(false);
+
   // Extract profile info and ratings from data, with fallbacks
   const profileInfo = data?.profileInfo || {};
   const ratings = data?.ratings || {};
@@ -39,7 +43,6 @@ export function ProfileOverview({ data }: ProfileOverviewProps) {
       .substring(0, 2)
       .toUpperCase();
   };
-
   return (
     <Card>
       <CardHeader>

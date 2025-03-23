@@ -20,12 +20,14 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Loader2 } from "lucide-react";
+import { LoadingStates } from "./component/loading-states";
 
 export default function DashboardPage() {
   const [username, setUsername] = useState<string>("");
   const [inputUsername, setInputUsername] = useState<string>("");
   const [analysisData, setAnalysisData] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  const [currentStep, setCurrentStep] = useState<"scraping" | "analyzing" | "generating">("scraping");
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -59,6 +61,7 @@ export default function DashboardPage() {
 
     setLoading(true);
     setError(null);
+    setCurrentStep("scraping");
 
     try {
       const controller = new AbortController();
@@ -81,7 +84,7 @@ export default function DashboardPage() {
       }
 
       const scrapeData = await scrapeResponse.json();
-      console.log("Scraped data:", scrapeData);
+      setCurrentStep("analyzing");
 
       // Step 2: Call the analyze API with scraped data
       const analyzeResponse = await fetch("/api/analyze", {
@@ -101,8 +104,8 @@ export default function DashboardPage() {
         );
       }
 
+      setCurrentStep("generating");
       const analysisResult = await analyzeResponse.json();
-      console.log("Analysis result:", analysisResult);
 
       setAnalysisData(analysisResult);
       sessionStorage.setItem("profileAnalysis", JSON.stringify(analysisResult));
@@ -144,13 +147,7 @@ export default function DashboardPage() {
   if (loading) {
     return (
       <DashboardShell>
-        <div className="flex flex-col items-center justify-center min-h-[60vh]">
-          <Loader2 className="h-10 w-10 text-primary animate-spin mb-4" />
-          <p className="text-lg">Analyzing profile data for @{username}...</p>
-          <p className="text-sm text-muted-foreground mt-2">
-            This may take up to 2 minutes
-          </p>
-        </div>
+        <LoadingStates username={username} currentStep={currentStep} />
       </DashboardShell>
     );
   }
@@ -193,29 +190,6 @@ export default function DashboardPage() {
 
   return (
     <DashboardShell>
-      <DashboardHeader
-        heading="Influencer Analytics"
-        text={`Comprehensive analysis and insights for @${
-          username ||
-          (analysisData.profileInfo ? analysisData.profileInfo.username : "")
-        }`}
-      />
-      <div className="mb-6">
-        <form onSubmit={handleSubmit} className="flex gap-2">
-          <div className="flex-1">
-            <Input
-              type="text"
-              placeholder="Enter Instagram username"
-              value={inputUsername}
-              onChange={(e) => setInputUsername(e.target.value)}
-            />
-          </div>
-          <Button type="submit" disabled={!inputUsername.trim() || loading}>
-            {loading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
-            Analyze
-          </Button>
-        </form>
-      </div>
 
       <Tabs defaultValue="overview" className="space-y-4">
         <TabsList>
