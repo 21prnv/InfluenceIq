@@ -104,17 +104,27 @@ async function isSessionValid(page) {
 async function scrapeInstagramReels(username) {
   console.log(`Starting to scrape reels for user: ${username}`);
 
-  const browser = await puppeteer.launch({
-    executablePath: "/usr/bin/google-chrome",
+  const options = {
+    headless: true,
     args: [
-      "--no-sandbox",
-      "--disable-setuid-sandbox",
-      "--disable-dev-shm-usage",
-      "--disable-accelerated-2d-canvas",
-      "--window-size=1920,1080",
-      "--user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36",
-    ],
-  });
+      '--no-sandbox',
+      '--disable-setuid-sandbox',
+      '--disable-dev-shm-usage',
+      '--disable-gpu',
+      '--disable-accelerated-2d-canvas',
+      '--window-size=1920,1080',
+      '--single-process',
+      '--no-zygote',
+      '--disable-extensions'
+    ]
+  };
+
+  // Add executablePath only in production (Render.com)
+  if (process.env.NODE_ENV === 'production') {
+    options.executablePath = '/usr/bin/google-chrome-stable';
+  }
+
+  const browser = await puppeteer.launch(options);
 
   const page = await browser.newPage();
   await page.setViewport({ width: 1920, height: 1080 });
