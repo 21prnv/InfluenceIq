@@ -5,14 +5,7 @@ ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
 
 WORKDIR /usr/src/app
 
-# Copy package.json and package-lock.json from the server subdirectory
-COPY server/package.json server/package-lock.json ./
-
-# Install dependencies
+COPY package.json package-lock.json ./
 RUN npm ci
-
-# Copy the rest of the server code
-COPY server/ .
-
-# Start the app
+COPY . .
 CMD [ "node", "server.js" ]
