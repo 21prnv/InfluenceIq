@@ -1,15 +1,8 @@
-// server.js
-const express = require("express");
-const puppeteer = require("puppeteer-extra");
-const StealthPlugin = require("puppeteer-extra-plugin-stealth");
-const { createClient } = require("@supabase/supabase-js");
-const cors = require("cors");
-require("dotenv").config();
-
-// Initialize Express app
-const app = express();
-app.use(cors()); // Enable CORS for all routes
-app.use(express.json());
+// app/api/scrape-instagram/route.ts
+import { createClient } from "@/utils/supbase/server";
+import { NextResponse } from "next/server";
+import puppeteer from "puppeteer-extra";
+import StealthPlugin from "puppeteer-extra-plugin-stealth";
 
 // Initialize Supabase client
 const supabaseUrl = process.env.SUPABASE_URL;
@@ -108,8 +101,12 @@ async function isSessionValid(page) {
 async function scrapeInstagramReels(username) {
   console.log(`Starting to scrape reels for user: ${username}`);
 
+  const exucutablePath = await chromium.executablePath(
+    "https://github.com/Sparticuz/chromium/releases/download/v133.0.0/chromium-v133.0.0-pack.tar"
+  );
   const browser = await puppeteer.launch({
     headless: true,
+    executablePath: exucutablePath,
     args: [
       "--no-sandbox",
       "--disable-setuid-sandbox",
@@ -123,6 +120,21 @@ async function scrapeInstagramReels(username) {
       "--disable-site-isolation-trials",
     ],
   });
+  //   const browser = await puppeteer.launch({
+  //     headless: true,
+  //     args: [
+  //       "--no-sandbox",
+  //       "--disable-setuid-sandbox",
+  //       "--disable-dev-shm-usage",
+  //       "--disable-accelerated-2d-canvas",
+  //       "--window-size=1920,1080",
+  //       "--user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36",
+  //       "--disable-blink-features=AutomationControlled",
+  //       "--disable-web-security",
+  //       "--disable-features=IsolateOrigins,site-per-process",
+  //       "--disable-site-isolation-trials",
+  //     ],
+  //   });
 
   const page = await browser.newPage();
   await page.setViewport({ width: 1920, height: 1080 });
