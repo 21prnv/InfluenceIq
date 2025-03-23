@@ -14,29 +14,6 @@ export function Nav() {
           >
             ImpactArc
           </Link>
-          
-          <div className="flex items-center gap-6">
-            <Link 
-              href="/" 
-              className="text-gray-300 hover:text-white transition-colors"
-            >
-              Home
-            </Link>
-            <Link 
-              href="/analyzer" 
-              className="text-gray-300 hover:text-white transition-colors"
-            >
-              Analyzer
-            </Link>
-            <StarBorder
-              as={Link}
-              href="/sign-in"
-              className="inline-flex items-center justify-center text-sm font-medium hover:opacity-90 transition-opacity px-4 py-2"
-              color="hsl(var(--primary))"
-            >
-              Sign in
-            </StarBorder>
-          </div>
         </div>
       </div>
     </nav>
