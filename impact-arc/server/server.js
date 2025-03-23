@@ -3,10 +3,12 @@ const express = require("express");
 const puppeteer = require("puppeteer-extra");
 const StealthPlugin = require("puppeteer-extra-plugin-stealth");
 const { createClient } = require("@supabase/supabase-js");
+const cors = require("cors");
 require("dotenv").config();
 
 // Initialize Express app
 const app = express();
+app.use(cors()); // Enable CORS for all routes
 app.use(express.json());
 
 // Initialize Supabase client
