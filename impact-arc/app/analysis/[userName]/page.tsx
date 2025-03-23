@@ -35,13 +35,44 @@ export default function DashboardPage() {
   const params = useParams(); // Get dynamic route params
   const supabase = createClient();
   // Extract username from route on mount
+  // Inside DashboardPage component
   useEffect(() => {
     const usernameFromRoute = params.userName as string;
     if (usernameFromRoute) {
       setUsername(decodeURIComponent(usernameFromRoute));
       checkAndFetchData(decodeURIComponent(usernameFromRoute));
     }
-  }, [params.username]);
+  }, [params.userName]);
+
+  // Function to merge scraped data with analytics data
+  const mergeReelsData = (scraped: any, analysis: any) => {
+    if (!scraped?.reels || !analysis?.reelsAnalysis) return analysis;
+
+    const updatedReelsAnalysis = analysis.reelsAnalysis.map((reel: any) => {
+      const matchingReel = scraped.reels.find((scrapedReel: any) => {
+        // Convert dates to a comparable format (e.g., YYYY-MM-DD)
+        const scrapedDate = new Date(scrapedReel.postDate)
+          .toISOString()
+          .split("T")[0];
+        const analysisDate = reel.timing.postDate; // Already in YYYY-MM-DD
+        return scrapedDate === analysisDate;
+      });
+
+      if (matchingReel) {
+        return {
+          ...reel,
+          url: matchingReel.url,
+          thumbnail: matchingReel.thumbnail, // Override the existing thumbnail if needed
+        };
+      }
+      return reel; // Return unchanged if no match
+    });
+
+    return {
+      ...analysis,
+      reelsAnalysis: updatedReelsAnalysis,
+    };
+  };
 
   // Check Supabase for existing data and fetch or prompt accordingly
   const checkAndFetchData = async (usernameToCheck: string) => {
@@ -49,7 +80,6 @@ export default function DashboardPage() {
     setError(null);
 
     try {
-      // Check if username exists in user_data
       const { data: existingData, error: fetchError } = await supabase
         .from("user_data")
         .select("insta_username, scrapped_data, reponse")
@@ -61,12 +91,14 @@ export default function DashboardPage() {
       }
 
       if (existingData) {
-        // Data exists, set it and display dashboard
         setScrapedData(existingData.scrapped_data);
-        setAnalysisData(existingData.reponse);
+        const mergedData = mergeReelsData(
+          existingData.scrapped_data,
+          existingData.reponse
+        );
+        setAnalysisData(mergedData);
         setLoading(false);
       } else {
-        // Data doesn’t exist, wait for user input to scrape and analyze
         setLoading(false);
       }
     } catch (err: any) {
@@ -85,7 +117,6 @@ export default function DashboardPage() {
     setError(null);
 
     try {
-      // Step 1: Scrape the data
       const scrapeResponse = await fetch("/api/scrap", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -103,7 +134,6 @@ export default function DashboardPage() {
       const scrapeData = await scrapeResponse.json();
       setScrapedData(scrapeData);
 
-      // Step 2: Analyze the scraped data
       const analyzeResponse = await fetch("/api/analyze", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -119,20 +149,19 @@ export default function DashboardPage() {
       }
 
       const analysisResult = await analyzeResponse.json();
-      setAnalysisData(analysisResult);
+      const mergedData = mergeReelsData(scrapeData, analysisResult);
+      setAnalysisData(mergedData);
 
-      // Step 3: Insert into Supabase
       const { error: insertError } = await supabase.from("user_data").insert({
         insta_username: inputUsername,
         scrapped_data: scrapeData,
-        reponse: analysisResult,
+        reponse: mergedData,
       });
 
       if (insertError) {
         throw new Error("Failed to save data: " + insertError.message);
       }
 
-      // Update URL and state
       router.push(`/analysis/${encodeURIComponent(inputUsername)}`);
       setUsername(inputUsername);
     } catch (err: any) {
