@@ -1,12 +1,18 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
+import { getProxiedImageUrl } from "@/app/utils/imageProxy"
+import { useEffect, useState } from "react"
 
 interface ProfileOverviewProps {
   data?: any
 }
 
 export function ProfileOverview({ data }: ProfileOverviewProps) {
+  // State for tracking image loading status
+  const [imageLoaded, setImageLoaded] = useState(false)
+  const [imageError, setImageError] = useState(false)
+
   // Extract profile info and ratings from data, with fallbacks
   const profileInfo = data?.profileInfo || {}
   const ratings = data?.ratings || {}
@@ -15,6 +21,15 @@ export function ProfileOverview({ data }: ProfileOverviewProps) {
   const username = profileInfo.username || "username"
   const name = profileInfo.name || "Name"
   const profilePic = profileInfo.profilePic || ""
+  
+  // Use the proxy for Instagram profile images with cache busting
+  const [proxiedProfilePic, setProxiedProfilePic] = useState("")
+  
+  useEffect(() => {
+    // Generate a cache key based on current time
+    const cacheKey = Date.now().toString()
+    setProxiedProfilePic(getProxiedImageUrl(profilePic, cacheKey))
+  }, [profilePic])
   
   // Extract profile ratings
   const profileRating = ratings.profile || {}
@@ -32,6 +47,18 @@ export function ProfileOverview({ data }: ProfileOverviewProps) {
       .toUpperCase();
   };
   
+  // Handle image loading error
+  const onImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+    setImageError(true)
+    console.error("Failed to load profile image:", profilePic)
+  }
+  
+  // Handle image loading success
+  const onImageLoad = () => {
+    setImageLoaded(true)
+    setImageError(false)
+  }
+  
   return (
     <Card>
       <CardHeader>
@@ -43,8 +70,11 @@ export function ProfileOverview({ data }: ProfileOverviewProps) {
           <div className="flex flex-col items-center gap-2">
             <Avatar className="h-24 w-24">
               <AvatarImage
-                src={profilePic}
+                src={proxiedProfilePic}
                 alt={name}
+                onError={onImageError}
+                onLoad={onImageLoad}
+                data-original-src={profilePic}
               />
               <AvatarFallback>
                 {getInitials(name)}

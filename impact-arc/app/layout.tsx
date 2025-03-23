@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { satoshi } from "./fonts/satoshi";
 import "./globals.css";
+import { Nav } from "./components/ui/nav";
 
 export const metadata: Metadata = {
   title: "ImpactArc - AI-Powered Influence Rating System",
@@ -14,8 +15,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="dark">
-      <body className={`${satoshi.className} antialiased w-full`}>
-        {children}
+      <body className={`${satoshi.className} antialiased w-full bg-black text-white min-h-screen`}>
+        <Nav />
+        <main>
+          {children}
+        </main>
       </body>
     </html>
   );

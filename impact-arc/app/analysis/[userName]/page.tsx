@@ -201,26 +201,6 @@ export default function DashboardPage() {
   // Dashboard with analyzed data
   return (
     <DashboardShell>
-      <DashboardHeader
-        heading="Influencer Analytics"
-        text={`Comprehensive analysis and insights for @${username}`}
-      />
-      <div className="mb-6">
-        <form onSubmit={handleSubmit} className="flex gap-2">
-          <div className="flex-1">
-            <Input
-              type="text"
-              placeholder="Enter another Instagram username"
-              value={inputUsername}
-              onChange={(e) => setInputUsername(e.target.value)}
-            />
-          </div>
-          <Button type="submit" disabled={!inputUsername.trim() || loading}>
-            {loading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
-            Analyze
-          </Button>
-        </form>
-      </div>
 
       <Tabs defaultValue="overview" className="space-y-4">
         <TabsList>

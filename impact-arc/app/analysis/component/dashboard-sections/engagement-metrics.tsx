@@ -81,13 +81,6 @@ export function EngagementMetrics({ data }: EngagementMetricsProps) {
                 </div>
               </div>
             </div>
-
-            <div>
-              <h3 className="text-lg font-medium mb-4">Engagement Trend</h3>
-              <div className="h-[300px]">
-                <LineChart data={chartData} />
-              </div>
-            </div>
           </div>
         </CardContent>
       </Card>

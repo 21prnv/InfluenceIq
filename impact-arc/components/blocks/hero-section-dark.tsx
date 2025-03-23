@@ -133,7 +133,7 @@ const HeroSection = React.forwardRef<HTMLDivElement, HeroSectionProps>(
       ctaText = "Analyze Profile",
       ctaHref = "/analyzer",
       bottomImage = {
-        dark: "https://farmui.vercel.app/dashboard.png",
+        dark: "/dashboard.png",
       },
       gridOptions,
       ...props
@@ -255,18 +255,6 @@ const HeroSection = React.forwardRef<HTMLDivElement, HeroSectionProps>(
         </div>
 
         <div className="relative z-10">
-          <nav className="relative bg-transparent border-b border-gray-800/30">
-            <div className="max-w-7xl mx-auto px-4">
-              <div className="flex items-center justify-between h-16">
-                <Link
-                  href="/"
-                  className="bg-clip-text bg-gradient-to-br from-white via-30% via-white to-white/30 font-bold text-2xl text-center leading-[1.2] md:leading-[1.3] text-transparent"
-                >
-                  ImpactArc
-                </Link>
-              </div>
-            </div>
-          </nav>
 
           <section className="relative max-w-full mx-auto">
             <div className="max-w-screen-xl mx-auto px-4 py-28 gap-12 md:px-8">
@@ -348,7 +336,7 @@ const HeroSection = React.forwardRef<HTMLDivElement, HeroSectionProps>(
                 <div className="mt-32 mx-10 relative">
                   <img
                     src={bottomImage.dark}
-                    className="w-full shadow-lg rounded-3xl border-1 border-gray-100 backdrop-blur-sm"
+                    className="w-full shadow-lg rounded-3xl border-1 border-gray-400 backdrop-blur-sm"
                     alt="Dashboard preview"
                   />
                 </div>
