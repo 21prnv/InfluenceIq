@@ -1,4 +1,4 @@
-import { NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import path from 'path';
 import { promisify } from 'util';
 import { exec } from 'child_process';
@@ -17,13 +17,10 @@ export async function GET(request: NextRequest) {
   const username = searchParams.get('username');
   
   if (!username) {
-    return new Response(JSON.stringify({ 
+    return NextResponse.json({ 
       success: false, 
       message: 'Username is required' 
-    }), {
-      headers: { 'Content-Type': 'application/json' },
-      status: 400
-    });
+    }, { status: 400 });
   }
 
   try {
@@ -36,54 +33,96 @@ export async function GET(request: NextRequest) {
     
     console.log(`Executing scraper for username: ${username}`);
     
-    // Run the script with the username parameter
-    const { stdout, stderr } = await execPromise(`node ${scriptPath} ${username}`);
-    
-    if (stderr) {
-      console.error('Scraper stderr:', stderr);
+    try {
+      // Run the script with the username parameter
+      const { stdout, stderr } = await execPromise(`node ${scriptPath} ${username}`);
+      
+      if (stderr) {
+        console.error('Scraper stderr:', stderr);
+      }
+      
+      console.log('Scraper stdout:', stdout);
+    } catch (execError: any) {
+      console.error('Error executing scraper:', execError);
+      return NextResponse.json({ 
+        success: false, 
+        message: 'Error scraping Instagram data', 
+        error: execError.message 
+      }, { status: 500 });
     }
-    
-    console.log('Scraper stdout:', stdout);
     
     // Check if file exists and process with Gemini API
     try {
       const fs = await import('fs');
+      
+      // Check if the file exists before trying to read it
+      if (!fs.existsSync(outputFile)) {
+        return NextResponse.json({ 
+          success: false, 
+          message: 'Scraper did not produce output file. The profile might not exist or Instagram might be blocking the request.' 
+        }, { status: 404 });
+      }
+      
       const data = fs.readFileSync(outputFile, 'utf8');
-      const scrapedResults = JSON.parse(data);
+      let scrapedResults;
+      
+      try {
+        scrapedResults = JSON.parse(data);
+      } catch (parseError) {
+        return NextResponse.json({ 
+          success: false, 
+          message: 'Failed to parse scraped data', 
+          error: 'The scraped data is not valid JSON' 
+        }, { status: 500 });
+      }
+      
+      // Make sure we have valid scraped results before proceeding
+      if (!scrapedResults || !scrapedResults.userInfo) {
+        return NextResponse.json({ 
+          success: false, 
+          message: 'Scraped data is invalid or incomplete' 
+        }, { status: 500 });
+      }
       
       // Send scraped data to Gemini API
       const geminiResponse = await processWithGemini(username, scrapedResults);
+      
+      if (!geminiResponse || geminiResponse.error) {
+        return NextResponse.json({ 
+          success: false, 
+          message: 'Failed to process data with Gemini API', 
+          error: geminiResponse?.error || 'Unknown Gemini API error' 
+        }, { status: 500 });
+      }
       
       // Save Gemini response to a new JSON file
       const geminiFilename = `${username}_gemini_analysis.json`;
       const geminiOutputFile = path.join(process.cwd(), 'app/api/scrape', geminiFilename);
       fs.writeFileSync(geminiOutputFile, JSON.stringify(geminiResponse, null, 2));
       
-      return new Response(JSON.stringify({ 
+      return NextResponse.json({ 
         success: true, 
         message: `Results saved to ${filename} and analysis saved to ${geminiFilename}`,
         filename,
         geminiFilename,
         results: scrapedResults,
         analysis: geminiResponse
-      }), {
-        headers: { 'Content-Type': 'application/json' },
-        status: 200
-      });
-    } catch (fileError) {
+      }, { status: 200 });
+    } catch (fileError: any) {
       console.error('Error reading file or processing with Gemini:', fileError);
-      throw new Error('Failed to read scraping results or process with Gemini');
+      return NextResponse.json({ 
+        success: false, 
+        message: 'Failed to read scraping results or process with Gemini', 
+        error: fileError.message 
+      }, { status: 500 });
     }
   } catch (error: any) {
     console.error('Error:', error);
-    return new Response(JSON.stringify({ 
+    return NextResponse.json({ 
       success: false, 
       message: 'Error scraping Instagram or processing with Gemini', 
       error: error.message 
-    }), {
-      headers: { 'Content-Type': 'application/json' },
-      status: 500
-    });
+    }, { status: 500 });
   }
 }
 

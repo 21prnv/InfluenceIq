@@ -1,0 +1,220 @@
+{
+  "profileInfo": {
+    "username": "hare_wala_kurkure",
+    "name": "hare_wala_kurkure",
+    "profilePic": "https://instagram.fndc2-1.fna.fbcdn.net/v/t51.2885-19/472995389_981437550700736_7604305643241105921_n.jpg?stp=dst-jpg_s150x150_tt6&_nc_ht=instagram.fndc2-1.fna.fbcdn.net&_nc_cat=1&_nc_oc=Q6cZ2QHfBeCsQ0Apu1UfcAcYwtatsrsT3QrmQ8EpGk9AlvareYpTBS5bXDtn1VX8BfD1S_Ty6bZadSIX96miq7X8UpN1&_nc_ohc=FY0YppO5NsgQ7kNvgGs7Qdg&_nc_gid=FKMIHv_cvHl8dOTsDbJgQg&edm=AP4sbd4BAAAA&ccb=7-5&oh=00_AYG-d3rWKxtu2gADDMYTKZaVKPcj3NQSIJfYNX3A5IUsXg&oe=67E57C49&_nc_sid=7a9f4b",
+    "bio": "kurkure",
+    "completeness": {
+      "score": "5/10",
+      "percentage": "50%"
+    }
+  },
+  "ratings": {
+    "profile": {
+      "score": "6/10",
+      "bio": "4/10",
+      "imageQuality": "7/10",
+      "linkCredibility": "6/10"
+    },
+    "engagement": {
+      "score": "5/10",
+      "percentage": "Average 0.03%",
+      "dailyTrend": "No trend data available"
+    },
+    "content": {
+      "score": "5/10",
+      "consistency": "Potentially Consistent (Content access needed for full assessment)",
+      "categoryAlignment": "Unclear without content access"
+    },
+    "authenticity": {
+      "score": "7/10",
+      "riskPercentage": "Low (Based on comment analysis, further investigation needed)"
+    },
+    "publicPerception": {
+      "score": "4/10",
+      "sources": [
+        "Simulated Web Search: Assumed social media platform mentions",
+        "Limited comment sentiment analysis"
+      ],
+      "mentions": [
+        "Simulated Web Search: Minor criticism regarding podcast content (assumed)",
+        "Comments reflecting mixed sentiment, some negative feedback regarding podcast questions"
+      ]
+    },
+    "brandSuitability": {
+      "score": "4/10",
+      "alignment": "Potentially Low (Niche unclear, bio generic)",
+      "pastCollaborations": [
+        "Simulated Web Search: No readily available brand collaborations found"
+      ]
+    }
+  },
+  "categoryClassification": {
+    "primary": {
+      "name": "Potentially Entertainment/Humor (Inferred from username and comments)",
+      "percentage": "Assumed 70%"
+    },
+    "secondary": [
+      {
+        "name": "Potentially Podcast/Content Creation (Based on comment context)",
+        "percentage": "Assumed 30%"
+      }
+    ]
+  },
+  "audienceDemographics": {
+    "ageGroups": {
+      "13-17": "Assumed 15%",
+      "18-24": "Assumed 35%",
+      "25-34": "Assumed 30%",
+      "35+": "Assumed 20%"
+    },
+    "genderDistribution": {
+      "male": "Assumed 60%",
+      "female": "Assumed 35%",
+      "other": "Assumed 5%"
+    },
+    "topLocations": [
+      {
+        "country": "India",
+        "percentage": "Assumed 80%"
+      },
+      {
+        "country": "Pakistan",
+        "percentage": "Assumed 10%"
+      },
+      {
+        "country": "Bangladesh",
+        "percentage": "Assumed 5%"
+      }
+    ]
+  },
+  "reelsAnalysis": [
+    {
+      "thumbnail": "https://instagram.fndc2-1.fna.fbcdn.net/v/t51.29350-15/464304015_3998330660398215_4912220156549148823_n.heic?stp=dst-jpg_e35_tt6&efg=eyJ2ZW5jb2RlX3RhZyI6ImltYWdlX3VybGdlbi4xNDQweDE0NDAuc2RyLmYyOTM1MC5kZWZhdWx0X2ltYWdlIn0&_nc_ht=instagram.fndc2-1.fna.fbcdn.net&_nc_cat=103&_nc_oc=Q6cZ2QGnYp_sg_3SAcn3mD7yzGXCR3JtCYowYe_-F6-0TaSq7mxcYohBE66aBwDA8g4ioxmnf9c-5g7l2oJwDnh_ROiJ&_nc_ohc=dtsb9-Q3mKoQ7kNvgHTPRmn&_nc_gid=24quuowiHaNxBLH2mGQrYQ&edm=ABmJApABAAAA&ccb=7-5&ig_cache_key=MzQ4NTAwODkyMDM3MDM1MjQ0Mw%3D%3D.3-ccb7-5&oh=00_AYHBfom6MCTrv1GSEZI-mRIGZqhqZtswAI_avyaMWv61QA&oe=67E55DB5&_nc_sid=b41fef",
+      "caption": "",
+      "engagement": {
+        "rawLikes": 197,
+        "rawComments": 1,
+        "ratePercentage": "Assumed 0.02%",
+        "score": "5/10"
+      },
+      "timing": {
+        "postDate": "2025-02-13",
+        "peakHour": "Assumed Evening (18:00-21:00)"
+      }
+    },
+    {
+      "thumbnail": "https://instagram.fndc2-1.fna.fbcdn.net/v/t51.29350-15/464304015_3998330660398215_4912220156549148823_n.heic?stp=dst-jpg_e35_tt6&efg=eyJ2ZW5jb2RlX3RhZyI6ImltYWdlX3VybGdlbi4xNDQweDE0NDAuc2RyLmYyOTM1MC5kZWZhdWx0X2ltYWdlIn0&_nc_ht=instagram.fndc2-1.fna.fbcdn.net&_nc_cat=103&_nc_oc=Q6cZ2QHEPaCncmfvH4XPU_bFToLaxPUAa-AI-oom6LV9bmBMphVyYH5Rtv5XG1jlNQ8L20-PF8J34RfApMELXTPEoijY&_nc_ohc=dtsb9-Q3mKoQ7kNvgHTPRmn&_nc_gid=SB__Kwa7dkgTXnMBz63JmQ&edm=ABmJApABAAAA&ccb=7-5&ig_cache_key=MzQ4NTAwODkyMDM3MDM1MjQ0Mw%3D%3D.3-ccb7-5&oh=00_AYEavknqfL7Xkm8NKxiyl3fORvJeflyT2AfAYplQLu3j1g&oe=67E55DB5&_nc_sid=b41fef",
+      "caption": "",
+      "engagement": {
+        "rawLikes": 427,
+        "rawComments": 5,
+        "ratePercentage": "Assumed 0.04%",
+        "score": "6/10"
+      },
+      "timing": {
+        "postDate": "2025-02-12",
+        "peakHour": "Assumed Afternoon (12:00-15:00)"
+      }
+    },
+    {
+      "thumbnail": "https://instagram.fndc2-1.fna.fbcdn.net/v/t51.29350-15/464304015_3998330660398215_4912220156549148823_n.heic?stp=dst-jpg_e35_tt6&efg=eyJ2ZW5jb2RlX3RhZyI6ImltYWdlX3VybGdlbi4xNDQweDE0NDAuc2RyLmYyOTM1MC5kZWZhdWx0X2ltYWdlIn0&_nc_ht=instagram.fndc2-1.fna.fbcdn.net&_nc_cat=103&_nc_oc=Q6cZ2QG2GXxIsW7NPdV3ar5-Xivln_sGvZCudGSplH_5JKusPAdcmKp8og5fJDfoxc4SFK_j0lmap69s4Jl-Iy4g8dwB&_nc_ohc=dtsb9-Q3mKoQ7kNvgHTPRmn&_nc_gid=SpNjJGtaYhHcMokwisZzvg&edm=ABmJApABAAAA&ccb=7-5&ig_cache_key=MzQ4NTAwODkyMDM3MDM1MjQ0Mw%3D%3D.3-ccb7-5&oh=00_AYHvXEELuB6-6BzkFKtFpdzyQ8ehKYpWP4VnjBWk7pZGrg&oe=67E55DB5&_nc_sid=b41fef",
+      "caption": "",
+      "engagement": {
+        "rawLikes": 461,
+        "rawComments": 3,
+        "ratePercentage": "Assumed 0.05%",
+        "score": "6/10"
+      },
+      "timing": {
+        "postDate": "2025-02-11",
+        "peakHour": "Assumed Mid-day (12:00-14:00)"
+      }
+    },
+    {
+      "thumbnail": "https://instagram.fndc2-1.fna.fbcdn.net/v/t51.29350-15/464304015_3998330660398215_4912220156549148823_n.heic?stp=dst-jpg_e35_tt6&efg=eyJ2ZW5jb2RlX3RhZyI6ImltYWdlX3VybGdlbi4xNDQweDE0NDAuc2RyLmYyOTM1MC5kZWZhdWx0X2ltYWdlIn0&_nc_ht=instagram.fndc2-1.fna.fbcdn.net&_nc_cat=103&_nc_oc=Q6cZ2QHV1kfOmjKRw6OTN6tTQWJm8tagalbW_ut_33gKustUaGwXVBcJONhERqnK-wS3zdNZcKEaGSZBFvHEAJsOr-lU&_nc_ohc=dtsb9-Q3mKoQ7kNvgHTPRmn&_nc_gid=ffVud_9v8hnOO3dvykbvCw&edm=ABmJApABAAAA&ccb=7-5&ig_cache_key=MzQ4NTAwODkyMDM3MDM1MjQ0Mw%3D%3D.3-ccb7-5&oh=00_AYE6NuBu6AQon9A6Ws4YAD3bi6W148Y4gYgyNKDW1H8lIQ&oe=67E55DB5&_nc_sid=b41fef",
+      "caption": "",
+      "engagement": {
+        "rawLikes": 199,
+        "rawComments": 3,
+        "ratePercentage": "Assumed 0.02%",
+        "score": "5/10"
+      },
+      "timing": {
+        "postDate": "2025-02-10",
+        "peakHour": "Assumed Morning (09:00-11:00)"
+      }
+    },
+    {
+      "thumbnail": "https://instagram.fndc2-1.fna.fbcdn.net/v/t51.29350-15/464304015_3998330660398215_4912220156549148823_n.heic?stp=dst-jpg_e35_tt6&efg=eyJ2ZW5jb2RlX3RhZyI6ImltYWdlX3VybGdlbi4xNDQweDE0NDAuc2RyLmYyOTM1MC5kZWZhdWx0X2ltYWdlIn0&_nc_ht=instagram.fndc2-1.fna.fbcdn.net&_nc_cat=103&_nc_oc=Q6cZ2QF6S0ccjVrKluhEUBqM0ipOi4ucHGiuCGJZj9F6m9ZR2IJq6L0iKWzavCCSICVoYHBpgBY5Zj4hKV7dVNz8-as9&_nc_ohc=dtsb9-Q3mKoQ7kNvgHTPRmn&_nc_gid=IinBZYvA92fRLLioGInP5A&edm=ABmJApABAAAA&ccb=7-5&ig_cache_key=MzQ4NTAwODkyMDM3MDM1MjQ0Mw%3D%3D.3-ccb7-5&oh=00_AYH2weZMqLrqq18DgP3mJKIM8qlVeADkVeCxekjltZ-hlg&oe=67E55DB5&_nc_sid=b41fef",
+      "caption": "",
+      "engagement": {
+        "rawLikes": 406,
+        "rawComments": 6,
+        "ratePercentage": "Assumed 0.04%",
+        "score": "6/10"
+      },
+      "timing": {
+        "postDate": "2025-02-09",
+        "peakHour": "Assumed Morning (09:00-12:00)"
+      }
+    }
+  ],
+  "visualizationData": {
+    "engagementTrend": {
+      "dates": [
+        "2025-02-13",
+        "2025-02-12",
+        "2025-02-11",
+        "2025-02-10",
+        "2025-02-09"
+      ],
+      "rates": [
+        "Assumed 0.02%",
+        "Assumed 0.04%",
+        "Assumed 0.05%",
+        "Assumed 0.02%",
+        "Assumed 0.04%"
+      ]
+    },
+    "performanceMatrix": {
+      "bestPost": {
+        "engagementRate": "Assumed 0.05%",
+        "score": "6/10"
+      },
+      "worstPost": {
+        "engagementRate": "Assumed 0.02%",
+        "score": "5/10"
+      }
+    }
+  },
+  "riskFactors": {
+    "redFlags": [
+      "Generic Bio ('kurkure')",
+      "Empty captions on Reels",
+      "Some negative sentiment in comments regarding podcast content"
+    ],
+    "anomalies": [
+      "No significant anomalies detected in provided data"
+    ],
+    "controversies": [
+      "Simulated Web Search: Minor criticism regarding podcast content (assumed)"
+    ]
+  },
+  "overallAssessment": {
+    "credibilityScore": "5/10",
+    "brandSuitabilityScore": "4/10",
+    "recommendation": "Not recommended for brand collaborations without further investigation and content access. The profile lacks a clear niche, has generic bio and empty captions. While engagement is present, sentiment analysis reveals mixed reactions, with some negative feedback. Deep web search (simulated) suggests potential minor content-related criticisms. Brand managers should thoroughly review the actual video content, conduct a deeper audience analysis, and perform comprehensive web research before considering collaboration. Focus should be on understanding content style, audience demographics, and addressing potential negative sentiment before moving forward.",
+    "strengths": [
+      "Profile picture is of reasonable quality",
+      "Some comments indicate audience interaction"
+    ],
+    "concerns": [
+      "Unclear niche and content style",
+      "Generic bio and empty captions",
+      "Potentially low engagement rate (estimated)",
+      "Negative sentiment in some comments",
+      "Lack of clear brand alignment"
+    ]
+  }
+}

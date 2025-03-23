@@ -39,3 +39,20 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+
+# Ignore system files
+.DS_Store
+.Trash/
+*.log
+node_modules/
+.env
+
+# Ignore macOS metadata
+._*
+
+# Ignore global directories outside the project
+../../*
+
+# Ignore package-lock.json (if not needed)
+package-lock.json

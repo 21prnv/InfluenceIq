@@ -152,12 +152,25 @@ const HeroSection = React.forwardRef<HTMLDivElement, HeroSectionProps>(
       setMessage("Analyzing profile... This may take up to 2 minutes.");
       
       try {
+        // Add timeout to the fetch operation
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 300000); // 5 minute timeout
+        
         const response = await fetch(`/api/scrape?username=${username}`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
+          signal: controller.signal
         });
+        
+        clearTimeout(timeoutId);
+        
+        if (!response.ok) {
+          // Handle HTTP error responses
+          const errorText = await response.text();
+          throw new Error(`Server responded with status: ${response.status}. Details: ${errorText}`);
+        }
         
         const data = await response.json();
         
@@ -167,16 +180,24 @@ const HeroSection = React.forwardRef<HTMLDivElement, HeroSectionProps>(
           if (data.analysis) {
             sessionStorage.setItem('profileAnalysis', JSON.stringify(data.analysis));
             // Redirect to results page using the App Router navigation
-            router.push('/results');
+            router.push('/analysis');
           } else {
             setError("Analysis completed but no results were returned");
           }
         } else {
           setError(data.message || "Failed to analyze profile");
         }
-      } catch (err) {
+      } catch (err: any) {
         console.error("Error analyzing profile:", err);
-        setError("An error occurred while analyzing the profile");
+        
+        // Provide more specific error messages
+        if (err.name === 'AbortError') {
+          setError("Request timed out. The analysis is taking too long, please try again.");
+        } else if (err.message.includes('fetch')) {
+          setError("Network error: Could not connect to the server. Please check your internet connection and try again.");
+        } else {
+          setError(`An error occurred: ${err.message || "Unknown error"}`);
+        }
       } finally {
         setIsLoading(false);
       }
