@@ -126,4 +126,4 @@ This project is licensed under the **Apache License Version 2.0** – see the `L
 ## 📢 **Join the Movement!**  
 Impact Arc is more than an analytics tool—it’s a step towards **fair, AI-driven influence measurement**. Let’s **redefine digital credibility** together! 🚀  
 
-💬 **Have questions?** Open an issue or connect with us on GitHub!
+💬 **Have questions?** Open an issue or connect with us on GitHub! 
