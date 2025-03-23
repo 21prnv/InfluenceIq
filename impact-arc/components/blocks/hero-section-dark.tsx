@@ -217,8 +217,8 @@ const HeroSection = React.forwardRef<HTMLDivElement, HeroSectionProps>(
         // Step 4: Insert data into Supabase
         const { error: insertError } = await supabase.from("user_data").insert({
           insta_username: username,
-          scraped_data: scrapedData,
-          response: geminiResponse,
+          scrapped_data: scrapedData,
+          reponse: geminiResponse,
         });
 
         if (insertError) {

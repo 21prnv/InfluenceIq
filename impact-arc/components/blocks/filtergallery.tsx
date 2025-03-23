@@ -17,6 +17,7 @@ export interface FilterGalleryItem {
   description: string;
   href: string;
   image: string;
+  category?: string;
 }
 
 export interface FilterGalleryProps {
