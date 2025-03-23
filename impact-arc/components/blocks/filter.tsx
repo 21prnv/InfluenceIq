@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { FilterGallery, FilterGalleryItem } from "./filtergallery";
 import { Button } from "@/components/ui/button";
 import { createClient } from "@/utils/supbase/client";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const Filter = () => {
   const [activeCategory, setActiveCategory] = useState("");
@@ -11,8 +12,23 @@ const Filter = () => {
   const [categories, setCategories] = useState<string[]>([]);
   const [creators, setCreators] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   const supabase = createClient();
+
+  // Scroll horizontally in the category tabs
+  const scroll = (direction: "left" | "right") => {
+    if (!scrollContainerRef.current) return;
+    
+    const container = scrollContainerRef.current;
+    const scrollAmount = container.clientWidth * 0.75;
+    
+    if (direction === "left") {
+      container.scrollBy({ left: -scrollAmount, behavior: "smooth" });
+    } else {
+      container.scrollBy({ left: scrollAmount, behavior: "smooth" });
+    }
+  };
 
   useEffect(() => {
     const fetchCategoriesAndCreators = async () => {
@@ -98,25 +114,32 @@ const Filter = () => {
   }, [activeCategory, creators]);
 
   return (
-    <div className="py-12 px-4 md:px-10">
-      <div className="container px-4 md:px-12 lg:px-24 mb-10">
-        <h2 className="text-3xl py-4 font-medium md:text-4xl lg:text-5xl text-white mb-6">
+    <div className="py-6 md:py-12 px-1 md:px-10">
+      <div className="container px-4 md:px-12 lg:px-24 mb-6 md:mb-10">
+        <h2 className="text-2xl sm:text-3xl py-2 sm:py-4 font-medium md:text-4xl lg:text-5xl text-white mb-3 sm:mb-6">
           Top Creator Rankings
         </h2>
-        <p className="text-zinc-400 mb-8 max-w-3xl">
+        <p className="text-sm sm:text-base text-zinc-400 mb-4 sm:mb-8 max-w-3xl">
           Browse the rankings of the most influential content creators across
           various categories. Numbers indicate their position in our rankings
           based on popularity and engagement.
         </p>
-        <div className="flex flex-wrap gap-3 md:gap-4 mb-2">
-          <div className="w-full overflow-x-auto pb-4 scrollbar-hide">
-            <div className="flex space-x-4 md:flex-wrap">
+        
+        {/* Mobile-optimized category filter */}
+        <div className="relative">
+          
+          <div className="relative w-full overflow-hidden">
+            <div 
+              ref={scrollContainerRef} 
+              className="flex overflow-x-auto py-2  scrollbar-hide snap-x snap-mandatory"
+              style={{ WebkitOverflowScrolling: 'touch' }}
+            >
               {categories.map((category) => (
                 <Button
                   key={category}
                   variant={activeCategory === category ? "default" : "outline"}
                   onClick={() => setActiveCategory(category)}
-                  className={`rounded-full transition-all duration-300 px-5 py-2 text-sm font-medium shadow-sm ${
+                  className={`rounded-full transition-all duration-300 px-4 sm:px-5 py-1 sm:py-2 text-xs sm:text-sm font-medium shadow-sm whitespace-nowrap mx-1 first:ml-0 snap-start flex-shrink-0 ${
                     activeCategory === category
                       ? "bg-gradient-to-r from-white to-gray-50 text-black hover:from-purple-600 hover:to-indigo-700 border-transparent transform scale-105"
                       : "border-zinc-700 text-zinc-300 hover:border-zinc-500 hover:text-white hover:bg-zinc-800/50"
@@ -129,9 +152,13 @@ const Filter = () => {
           </div>
         </div>
       </div>
+      
       {loading ? (
-        <div className="container mx-auto text-center py-20">
-          <h3 className="text-2xl text-zinc-400">Loading creators...</h3>
+        <div className="container mx-auto text-center py-8 sm:py-20">
+          <div className="flex flex-col items-center justify-center space-y-4">
+            <div className="w-8 h-8 border-t-2 border-b-2 border-white rounded-full animate-spin"></div>
+            <h3 className="text-xl sm:text-2xl text-zinc-400">Loading creators...</h3>
+          </div>
         </div>
       ) : filteredItems.length > 0 ? (
         <FilterGallery
@@ -139,8 +166,8 @@ const Filter = () => {
           items={filteredItems}
         />
       ) : (
-        <div className="container mx-auto text-center py-20">
-          <h3 className="text-2xl text-zinc-400">
+        <div className="container mx-auto text-center py-10 sm:py-20 px-4">
+          <h3 className="text-xl sm:text-2xl text-zinc-400">
             No creators found in this category.
           </h3>
           {categories.length > 1 && (

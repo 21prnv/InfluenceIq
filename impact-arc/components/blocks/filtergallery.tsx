@@ -104,7 +104,7 @@ const FilterGallery = ({
   return (
     <section className="">
       <div className="container mx-auto">
-        <div className="mb-8 -mt-24 flex items-end justify-end md:mb-10">
+        <div className="mb-8 sm:-mt-24 flex items-end justify-end md:mb-10">
           <div className="hidden shrink-0 gap-2 md:flex">
             <Button
               size="icon"

@@ -310,9 +310,12 @@ const HeroSection = React.forwardRef<HTMLDivElement, HeroSectionProps>(
                       <button
                         type="submit"
                         disabled={isLoading}
-                        className="w-full inline-flex justify-center items-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 disabled:opacity-50 disabled:cursor-not-allowed transition"
+                        className="w-full inline-flex justify-center items-center px-5 py-3 border border-transparent text-base font-medium rounded-lg text-white bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 shadow-lg shadow-purple-500/20 focus:outline-none focus:ring-2 focus:ring-purple-500/50 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 group"
                       >
-                        {ctaText}
+                        <span className="flex items-center">
+                          {ctaText}
+                          <ChevronRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform duration-300" />
+                        </span>
                       </button>
 
                       {error && (
