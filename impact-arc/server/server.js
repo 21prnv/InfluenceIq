@@ -1,7 +1,6 @@
 // server.js
 const express = require("express");
-const puppeteer = require("puppeteer-extra");
-const StealthPlugin = require("puppeteer-extra-plugin-stealth");
+const puppeteer = require("puppeteer");
 const { createClient } = require("@supabase/supabase-js");
 const cors = require("cors");
 require("dotenv").config();
@@ -16,9 +15,6 @@ const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseKey = process.env.SUPABASE_SERVICE_KEY;
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-// Apply StealthPlugin
-puppeteer.use(StealthPlugin());
-
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 // Function to fetch cookies from Supabase (specific row with id = 1)
@@ -26,8 +22,8 @@ async function fetchCookiesFromSupabase() {
   const { data, error } = await supabase
     .from("cookies")
     .select("cookie")
-    .eq("id", 1) // Target row with id = 1
-    .single(); // Ensure only one row is returned
+    .eq("id", 1)
+    .single();
 
   if (error || !data) {
     console.error("Error fetching cookies from Supabase for id=1:", error);
@@ -48,7 +44,7 @@ async function saveCookiesToSupabase(cookies) {
   const { error } = await supabase
     .from("cookies")
     .update({ cookie: JSON.stringify(cookies) })
-    .eq("id", 1); // Update the specific row with id = 1
+    .eq("id", 1);
 
   if (error) {
     console.error("Error updating cookies in Supabase for id=1:", error);
@@ -109,7 +105,7 @@ async function scrapeInstagramReels(username) {
   console.log(`Starting to scrape reels for user: ${username}`);
 
   const browser = await puppeteer.launch({
-    headless: true,
+    executablePath: "/usr/bin/google-chrome",
     args: [
       "--no-sandbox",
       "--disable-setuid-sandbox",
@@ -117,10 +113,6 @@ async function scrapeInstagramReels(username) {
       "--disable-accelerated-2d-canvas",
       "--window-size=1920,1080",
       "--user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36",
-      "--disable-blink-features=AutomationControlled",
-      "--disable-web-security",
-      "--disable-features=IsolateOrigins,site-per-process",
-      "--disable-site-isolation-trials",
     ],
   });
 
