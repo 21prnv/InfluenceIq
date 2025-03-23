@@ -8,6 +8,7 @@ import { motion } from "framer-motion";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/utils/supbase/client";
+import { LoadingStates } from "@/app/analysis/component/loading-states";
 
 const RetroGrid = ({
   angle = 65,
@@ -144,8 +145,10 @@ const HeroSection = React.forwardRef<HTMLDivElement, HeroSectionProps>(
     const [isLoading, setIsLoading] = useState(false);
     const [message, setMessage] = useState("");
     const [error, setError] = useState("");
+    const [currentStep, setCurrentStep] = useState<"scraping" | "analyzing" | "generating">("scraping");
     const router = useRouter();
     const supabase = createClient();
+
     const handleSubmit = async (e: React.FormEvent) => {
       e.preventDefault();
 
@@ -156,6 +159,7 @@ const HeroSection = React.forwardRef<HTMLDivElement, HeroSectionProps>(
 
       setIsLoading(true);
       setError("");
+      setCurrentStep("scraping");
       setMessage("Analyzing profile... This may take up to 2 minutes.");
 
       try {
@@ -193,7 +197,7 @@ const HeroSection = React.forwardRef<HTMLDivElement, HeroSectionProps>(
         }
 
         const scrapedData = await scrapeResponse.json();
-        console.log("Scraped Data:", scrapedData);
+        setCurrentStep("analyzing");
 
         // Step 3: Call the existing /api/analyze endpoint for Gemini response
         const analyzeResponse = await fetch("/api/analyze", {
@@ -211,6 +215,7 @@ const HeroSection = React.forwardRef<HTMLDivElement, HeroSectionProps>(
           );
         }
 
+        setCurrentStep("generating");
         const geminiResponse = await analyzeResponse.json();
 
         // Step 4: Insert data into Supabase
@@ -271,75 +276,64 @@ const HeroSection = React.forwardRef<HTMLDivElement, HeroSectionProps>(
           <section className="relative max-w-full mx-auto">
             <div className="max-w-screen-xl mx-auto px-4 py-28 gap-12 md:px-8">
               <div className="space-y-5 max-w-3xl leading-0 lg:leading-5 mx-auto text-center">
-                <h1 className="text-sm text-gray-400 group font-geist mx-auto px-5 py-2 bg-gradient-to-tr from-zinc-300/5 via-gray-400/5 to-transparent border-[2px] border-white/5 rounded-3xl w-fit backdrop-blur-sm">
-                  {title}
-                  <ChevronRight className="inline w-4 h-4 ml-2 group-hover:translate-x-1 duration-300" />
-                </h1>
-                <h2 className="text-4xl font-geist bg-clip-text text-transparent mx-auto md:text-6xl bg-[linear-gradient(180deg,_#FFF_0%,_rgba(255,_255,_255,_0.00)_202.08%)]">
-                  {subtitle.regular}
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-300 to-orange-200">
-                    {subtitle.gradient}
-                  </span>
-                </h2>
-                <p className="max-w-2xl mx-auto text-gray-300">{description}</p>
+                {!isLoading && (
+                  <>
+                    <h1 className="text-sm text-gray-400 group font-geist mx-auto px-5 py-2 bg-gradient-to-tr from-zinc-300/5 via-gray-400/5 to-transparent border-[2px] border-white/5 rounded-3xl w-fit backdrop-blur-sm">
+                      {title}
+                      <ChevronRight className="inline w-4 h-4 ml-2 group-hover:translate-x-1 duration-300" />
+                    </h1>
+                    <h2 className="text-4xl font-geist bg-clip-text text-transparent mx-auto md:text-6xl bg-[linear-gradient(180deg,_#FFF_0%,_rgba(255,_255,_255,_0.00)_202.08%)]">
+                      {subtitle.regular}
+                      <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-300 to-orange-200">
+                        {subtitle.gradient}
+                      </span>
+                    </h2>
+                    <p className="max-w-2xl mx-auto text-gray-300">{description}</p>
+                  </>
+                )}
 
                 <form
                   onSubmit={handleSubmit}
-                  className="mt-8 space-y-4 max-w-md mx-auto"
-                >
-                  <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <Search className="h-5 w-5 text-gray-400" />
-                    </div>
-                    <input
-                      type="text"
-                      placeholder="Enter Instagram username"
-                      value={username}
-                      onChange={(e) => setUsername(e.target.value)}
-                      className="block w-full pl-10 pr-4 py-3 border border-gray-600 rounded-lg bg-gray-900/50 backdrop-blur-sm text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition"
-                      disabled={isLoading}
-                    />
-                  </div>
-
-                  <button
-                    type="submit"
-                    disabled={isLoading}
-                    className="w-full inline-flex justify-center items-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 disabled:opacity-50 disabled:cursor-not-allowed transition"
-                  >
-                    {isLoading ? (
-                      <>
-                        <svg
-                          className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                        >
-                          <circle
-                            className="opacity-25"
-                            cx="12"
-                            cy="12"
-                            r="10"
-                            stroke="currentColor"
-                            strokeWidth="4"
-                          ></circle>
-                          <path
-                            className="opacity-75"
-                            fill="currentColor"
-                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                          ></path>
-                        </svg>
-                        Analyzing...
-                      </>
-                    ) : (
-                      ctaText
-                    )}
-                  </button>
-
-                  {error && (
-                    <div className="text-red-500 text-sm mt-2">{error}</div>
+                  className={cn(
+                    "mt-8 space-y-4 max-w-md mx-auto",
+                    isLoading && "mt-0"
                   )}
-                  {message && !error && (
-                    <div className="text-green-400 text-sm mt-2">{message}</div>
+                >
+                  {isLoading ? (
+                    <div className="mt-0">
+                      <LoadingStates username={username} currentStep={currentStep} />
+                    </div>
+                  ) : (
+                    <>
+                      <div className="relative">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                          <Search className="h-5 w-5 text-gray-400" />
+                        </div>
+                        <input
+                          type="text"
+                          placeholder="Enter Instagram username"
+                          value={username}
+                          onChange={(e) => setUsername(e.target.value)}
+                          className="block w-full pl-10 pr-4 py-3 border border-gray-600 rounded-lg bg-gray-900/50 backdrop-blur-sm text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition"
+                          disabled={isLoading}
+                        />
+                      </div>
+
+                      <button
+                        type="submit"
+                        disabled={isLoading}
+                        className="w-full inline-flex justify-center items-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 disabled:opacity-50 disabled:cursor-not-allowed transition"
+                      >
+                        {ctaText}
+                      </button>
+
+                      {error && (
+                        <div className="text-red-500 text-sm mt-2">{error}</div>
+                      )}
+                      {message && !error && (
+                        <div className="text-green-400 text-sm mt-2">{message}</div>
+                      )}
+                    </>
                   )}
                 </form>
               </div>
