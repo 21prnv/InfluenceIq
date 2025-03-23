@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -16,20 +16,26 @@ import {
 } from "./component/dashboard-sections";
 import { DashboardHeader } from "./component/dashboard-header";
 import { DashboardShell } from "./component/dashboard-shell";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Loader2 } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { LoadingStates } from "./component/loading-states";
 
-export default function DashboardPage() {
+// Create a separate component that uses useSearchParams
+function DashboardContent() {
   const [username, setUsername] = useState<string>("");
   const [inputUsername, setInputUsername] = useState<string>("");
   const [analysisData, setAnalysisData] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(false);
-  const [currentStep, setCurrentStep] = useState<"scraping" | "analyzing" | "generating">("scraping");
+  const [currentStep, setCurrentStep] = useState<
+    "scraping" | "analyzing" | "generating"
+  >("scraping");
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
+
+  // This import is now safely inside a component that will be wrapped in Suspense
+  const { useSearchParams } = require("next/navigation");
   const searchParams = useSearchParams();
 
   useEffect(() => {
@@ -190,7 +196,6 @@ export default function DashboardPage() {
 
   return (
     <DashboardShell>
-
       <Tabs defaultValue="overview" className="space-y-4">
         <TabsList>
           <TabsTrigger value="overview">Overview</TabsTrigger>
@@ -324,5 +329,28 @@ export default function DashboardPage() {
         </TabsContent>
       </Tabs>
     </DashboardShell>
+  );
+}
+
+// Loading fallback component
+function SearchParamsLoading() {
+  return (
+    <DashboardShell>
+      <div className="flex items-center justify-center h-64">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto"></div>
+          <p className="mt-4 text-muted-foreground">Loading...</p>
+        </div>
+      </div>
+    </DashboardShell>
+  );
+}
+
+// Main component with Suspense
+export default function DashboardPage() {
+  return (
+    <Suspense fallback={<SearchParamsLoading />}>
+      <DashboardContent />
+    </Suspense>
   );
 }
