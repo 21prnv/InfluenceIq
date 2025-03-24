@@ -1,7 +1,7 @@
 "use client";
 import * as React from "react";
 import { cn } from "@/lib/utils";
-import { ChevronRight, Search } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { Tiles } from "../ui/tiles";
 import { motion } from "framer-motion";
@@ -151,6 +151,14 @@ const HeroSection = React.forwardRef<HTMLDivElement, HeroSectionProps>(
     const router = useRouter();
     const supabase = createClient();
 
+    // Example usernames that users can click on
+    const exampleUsernames = ["mohak.mangal", "nitishrajpute", "rajshamani", "saketgokhale", "shreemanlegend", "triggeredinsaan", "virat.kohli", "bhuvan.bam22", "puravjha" ];
+
+    const handleUsernameClick = (name: string) => {
+      setUsername(name);
+      setError(""); // Clear any previous errors
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
       e.preventDefault();
 
@@ -162,7 +170,7 @@ const HeroSection = React.forwardRef<HTMLDivElement, HeroSectionProps>(
       setIsLoading(true);
       setError("");
       setCurrentStep("scraping");
-      setMessage("Analyzing profile... This may take up to 2 minutes.");
+      setMessage("Click on the analyze button to get the results");
 
       try {
         // Step 1: Check if username already exists in Supabase
@@ -183,7 +191,7 @@ const HeroSection = React.forwardRef<HTMLDivElement, HeroSectionProps>(
         }
 
         // Step 2: Call the Instagram scraping API
-        const scrapeResponse = await fetch("https://server-production-a40c.up.railway.app/api/scrape-instagram", {
+        const scrapeResponse = await fetch("/api/scrap", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -237,7 +245,7 @@ const HeroSection = React.forwardRef<HTMLDivElement, HeroSectionProps>(
         setTimeout(() => router.push(`/analysis/${username}`), 1000);
       } catch (err: any) {
         console.error("Error in analysis process:", err);
-        setError(`An error occurred: ${err.message || "Unknown error"}`);
+        setError(`Scrapping Data from the Instagram this may take 2 mins You can check above examples mean time"}`);
       } finally {
         setIsLoading(false);
       }
@@ -277,9 +285,6 @@ const HeroSection = React.forwardRef<HTMLDivElement, HeroSectionProps>(
                         {subtitle.gradient}
                       </span>
                     </h2>
-                    <p className="max-w-2xl mx-auto text-gray-300">
-                      {description}
-                    </p>
                   </>
                 )}
 
@@ -300,8 +305,20 @@ const HeroSection = React.forwardRef<HTMLDivElement, HeroSectionProps>(
                   ) : (
                     <>
                       <div className="relative">
-                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                          <Search className="h-5 w-5 text-gray-400" />
+                        <div className="mb-3">
+                          <p className="text-gray-400 text-sm mb-2">Try examples:</p>
+                          <div className="flex flex-wrap gap-2 py-2 justify-center">
+                            {exampleUsernames.map((name) => (
+                              <button
+                                key={name}
+                                type="button"
+                                onClick={() => handleUsernameClick(name)}
+                                className="px-3 py-1 text-sm bg-gray-800/70 hover:bg-purple-600/30 text-gray-300 rounded-full border border-gray-700 transition-colors duration-200"
+                              >
+                                {name}
+                              </button>
+                            ))}
+                          </div>
                         </div>
                         <input
                           type="text"
@@ -325,7 +342,7 @@ const HeroSection = React.forwardRef<HTMLDivElement, HeroSectionProps>(
                       </button>
 
                       {error && (
-                        <div className="text-red-500 text-sm mt-2">{error}</div>
+                        <div className="text-red-500 text-sm mt-2">Vercel Timeout Error Try Running Locally OR <br/> Check above examples for quick results</div>
                       )}
                       {message && !error && (
                         <div className="text-green-400 text-sm mt-2">
@@ -337,7 +354,7 @@ const HeroSection = React.forwardRef<HTMLDivElement, HeroSectionProps>(
                 </form>
               </div>
 
-              {bottomImage && !isLoading && (
+              {/* {bottomImage && !isLoading && (
                 <div className="mt-32 mx-10 relative">
                   <img
                     src={bottomImage.dark}
@@ -345,7 +362,7 @@ const HeroSection = React.forwardRef<HTMLDivElement, HeroSectionProps>(
                     alt="Dashboard preview"
                   />
                 </div>
-              )}
+              )} */}
             </div>
           </section>
         </div>
