@@ -95,6 +95,32 @@ impact-arc/
 └── utils/              # Helper functions
 ```
 
+## 🔐 **Environment Variables**
+
+Create a `.env.local` file in the root directory with the following variables:
+
+```bash
+# Instagram Credentials
+INSTAGRAM_USERNAME=your_username
+INSTAGRAM_PASSWORD=your_password
+INSTAGRAM_SESSIONID=your_session_id
+
+# API Keys
+GEMINI_API_KEY=your_gemini_api_key
+
+# Supabase Configuration
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_key
+
+# Backend Service
+BACKEND_URL=your_backend_url
+```
+
+Replace placeholder values with your actual credentials and API keys.
+
+---
+
+
 ---
 
 ## 🌍 **Deployment**  
