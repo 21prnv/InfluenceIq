@@ -201,13 +201,16 @@ const HeroSection = React.forwardRef<HTMLDivElement, HeroSectionProps>(
         }
 
         // Step 2: Call the Instagram scraping API
-        const scrapeResponse = await fetch("/api/scrape", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ username }),
-        });
+        const scrapeResponse = await fetch(
+          "https://server-production-a40c.up.railway.app/api/scrape-instagram",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ username }),
+          }
+        );
 
         if (!scrapeResponse.ok) {
           const errorText = await scrapeResponse.text();
