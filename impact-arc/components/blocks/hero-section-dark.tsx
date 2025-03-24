@@ -152,7 +152,17 @@ const HeroSection = React.forwardRef<HTMLDivElement, HeroSectionProps>(
     const supabase = createClient();
 
     // Example usernames that users can click on
-    const exampleUsernames = ["mohak.mangal", "nitishrajpute", "rajshamani", "saketgokhale", "shreemanlegend", "triggeredinsaan", "virat.kohli", "bhuvan.bam22", "puravjha" ];
+    const exampleUsernames = [
+      "mohak.mangal",
+      "nitishrajpute",
+      "rajshamani",
+      "saketgokhale",
+      "shreemanlegend",
+      "triggeredinsaan",
+      "virat.kohli",
+      "bhuvan.bam22",
+      "puravjha",
+    ];
 
     const handleUsernameClick = (name: string) => {
       setUsername(name);
@@ -191,7 +201,7 @@ const HeroSection = React.forwardRef<HTMLDivElement, HeroSectionProps>(
         }
 
         // Step 2: Call the Instagram scraping API
-        const scrapeResponse = await fetch("/api/scrap", {
+        const scrapeResponse = await fetch("/api/scrape", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -245,7 +255,9 @@ const HeroSection = React.forwardRef<HTMLDivElement, HeroSectionProps>(
         setTimeout(() => router.push(`/analysis/${username}`), 1000);
       } catch (err: any) {
         console.error("Error in analysis process:", err);
-        setError(`Scrapping Data from the Instagram this may take 2 mins You can check above examples mean time"}`);
+        setError(
+          `Scrapping Data from the Instagram this may take 2 mins You can check above examples mean time"}`
+        );
       } finally {
         setIsLoading(false);
       }
@@ -306,7 +318,9 @@ const HeroSection = React.forwardRef<HTMLDivElement, HeroSectionProps>(
                     <>
                       <div className="relative">
                         <div className="mb-3">
-                          <p className="text-gray-400 text-sm mb-2">Try examples:</p>
+                          <p className="text-gray-400 text-sm mb-2">
+                            Try examples:
+                          </p>
                           <div className="flex flex-wrap gap-2 py-2 justify-center">
                             {exampleUsernames.map((name) => (
                               <button
@@ -342,7 +356,10 @@ const HeroSection = React.forwardRef<HTMLDivElement, HeroSectionProps>(
                       </button>
 
                       {error && (
-                        <div className="text-red-500 text-sm mt-2">Vercel Timeout Error Try Running Locally OR <br/> Check above examples for quick results</div>
+                        <div className="text-red-500 text-sm mt-2">
+                          Vercel Timeout Error Try Running Locally OR <br />{" "}
+                          Check above examples for quick results
+                        </div>
                       )}
                       {message && !error && (
                         <div className="text-green-400 text-sm mt-2">
