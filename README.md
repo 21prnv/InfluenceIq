@@ -118,8 +118,6 @@ BACKEND_URL=your_backend_url
 
 Replace placeholder values with your actual credentials and API keys.
 
----
-
 
 ---
 
