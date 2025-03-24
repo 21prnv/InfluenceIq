@@ -21,6 +21,10 @@ const nextConfig: NextConfig = {
       { hostname: "www.datocms-assets.com", pathname: "/13375P34K/**" },
       // exact match protocol and domain
       { protocol: "https", hostname: "assets.vercel.com" },
+
+      { hostname: "pbs.twimg.com" },
+      
+      { hostname: "**.pbs.twimg.com" },
     ],
   },
   eslint: {
